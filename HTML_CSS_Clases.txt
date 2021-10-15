@@ -1,0 +1,462 @@
+
+--------- *HTML ( HyperText Markup Lenguaje ) ----------------> [Estructura]
+
+Es un lenguaje usado para crear documentos WEB, este lenguaje contiene tags que organizan y estructuran texto
+incluyendo imagenes, crear formularios y tablas, y linkear a otros documentos o paginas web, todo a travez de Internet
+
+
+--------- *CSS ( Cascadianing Style Sheets ) ----------------> [Presentación]
+
+Es un lenguaje usado apra crear documentos en la WEB, esto quiere decir que es la forma de como lusira la presentacion
+de una pagina web
+
+
+--------- Atributos 
+
+Un atributo es un elemento que nos provee información extra sobre algún tag u objeto que estemos utilizando como un
+valor
+
+
+--------- Elemento
+
+Un elemento es una etiqueta cuyo contenido se encuentra envuelto en una sección de codigo ejemplos
+
+	1.- Tags ----> 		<body></body>
+	2.- Attributos ------->	<strong attribute="value">
+	3.- Elements ------>	<p>content</p>
+
+
+
+
+
+----------- index.html
+
+Este documento es un documento donde podemos crear la estructura de nuestra pagina WEB
+
+
+----------- Agregar comentarios
+
+	<!-- Comentario que queramo -->
+
+
+----------- Doctype
+
+	<!DOCTYPE html>
+
+Es un documento de tipos de declaraciones que deja al navegador saber cual version de HTML estamos usando y el cual
+siempre deberemos de incluir dentro de nuestros proyectos de desarrollo WEB
+
+
+	NOTA: Si agregamos al campo de texto la descripción basicpage y damos enter entonces nos genera una
+	      estructura basica de un HTML
+
+
+
+----------- Comandos basicos para HTML
+
+	<p>		Sirve para la creacion de parrafos
+	<body>		Para el cuerpo de la pagina web
+	<em>		Sirve para hacer enfasis en el texto de un parrafo
+	<head>		Ponemos el encabezado
+	<title>		Poner el titulo
+	<a href="">	De esta manera podemos poner un vinculo hacía alguna referencia
+	<ul>		Crear listas
+	<address>	Para crear direcciones 
+	<table>		Para crear tablas
+
+	
+	----------------
+
+	Caracteres Especiales
+
+	&amp;	Crea el caracter &
+	&copy;	Crea el caracter Copyright
+	&lt;	Crea el caracter <
+
+
+----------- Hyperlinks
+
+Para hacer referencia a algun vinculo usamos el atributo <a href="">TEXTO</a> en caso de que no queramos hacer
+referencia a alguna pagina web y queramos hacerlo a algun documento de nuestro proyecto web solamente debemos de 
+asignar el nombre del archivo, ejemplo:
+
+	<a href="www.youtube.com">TEXTO</a>	1ra Opcion
+
+	<a href="vegetables.html">TEXTO</a>	2da Opcion
+
+
+
+------------ Listas
+
+Par apoder generar listas nosotros debemos de generar un arbol de nodos padres e hijos, donde en la parte de los hijos
+nosotros iremos colocando los elementos que contendra nuestra lista y para eso usaremos el atributo <ul> donde cada
+elemento de la lista sera marcado con un <li>, EJEMPLO
+
+	<ul>
+		<li>Carrots</li>
+		<li>Carrots</li>
+		<li>Carrots</li>
+	</ul>
+
+Para hacer una lista ordenada hacemos con el atributo <ol>, ejemplo:
+
+	<ol>
+		<li>Carrots</li>
+		<li>Carrots</li>
+		<li>Carrots</li>
+	</ol>
+
+Para hacer una lista descriptiva
+
+	<dl>
+		<dt>Carrots</dt>
+		<dd>This is a carrot</dd>
+
+
+		<dt>Carrots</dt>
+		<dd>This is not a carrot</dd>	
+	</dl>
+
+
+----------- Imagenes
+
+Para colocar una imagen en nuestro archivo HTML utilizamos el atributo <img src="[Dirección de la imagen]" alt="">
+si queremos asignarle un ancho y un largo a la imagen, ponemos los comandos height and width, ejemplo:
+
+	<img src="images/carrots.png" alt="A bunch o carrots" height="375" width="375">
+
+
+
+----------- Direcciones
+
+Para hacer una lista de direcciones utilizamos el atributo address, con el cual podremos generar una lista de 
+datos en forma descriptiva de un objeto o imagenes, etc.., ejemplo:
+
+	<address>
+	  <ul>
+		<li>Carrots</li>
+		<li>Carrots</li>
+		<li>Carrots</li>
+	  </ul>
+	</address>	
+
+
+---------- Tablas
+
+Para poder generar una tabla dentro de HTML utilizamos el elemento <table> haciendo que cada uno de sus secciones de
+la tabla se genere con un <tr> para asignar cada elemento dentro de cada segmento con un <th> para los titulos y con
+un <td> para los datos en cada espacio, ejemplo:
+
+	<table>
+	  <tr>
+	    <th> Name</th>
+	    <th> Address</th>
+	    <th> Phone</th>
+	  </tr>
+	  <tr>
+	    <td> Edwin </td>
+	    <td> Edwin </td>
+	    <td> Edwin </td>
+	  </tr>
+	</table>
+
+
+
+----------- Formularios
+
+Se utilizan para crear formularios al momento de obtener información de algún usuario y para crear un formulario 
+necesitaremos asignar el elemento <form> donde dentro de él vamos a poder crear campos de texto, etiquetas, etc...
+ejemplo usando cada uno de los casos
+
+	<form>
+		<fieldset>
+		  <legend>Profile Info</legend>
+		  Name: <input type="text" placeholder="Aqui va tu nombre">
+		  Email: <input type="text" placeholder="Aqui va tu email">
+		  Password: <input type="password">
+		</fieldset>
+		<br>
+
+		Gender:<br>
+		<input type="radio"> Male
+		<input type="radio"> Female
+		<br>
+
+		Type of Computer: <br>
+		<input type="checkbox"> Laptop
+		<input type="checkbox"> Desk
+		<br>
+
+		Age:<br>
+		<select>
+		  <option>0-20</option>
+		  <option>20-40</option>
+		  <option>40+</option>		
+		</select>
+		<br>
+
+		Biography:<br>
+		<textarea cols="30" rows="3"></textarea>
+		<br>
+
+		<input type="submit" value="save my info!">
+		<br>
+ 	</form> 
+
+
+
+------------- ID's y Clases
+
+Para poder hacer referencia a objetos dentro de los HTML se usan los ID con el atributo [id=""] o en forma de clase
+con [class=""], la diferencia de un ID es que solamente puede tener un UNICO identificador, mientras que con una 
+clase puedes tener tantos objetos con el mimso nombre como sea necesario, un ejemplo de esto será:
+
+	<p id="parrafo1">Este es un parrafo</p>
+	<p id="parrafo2">Este es un parrafo</p>
+	<p class="parrafo1">Este es un parrafo</p>
+	<p class="parrafo1">Este es un parrafo</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

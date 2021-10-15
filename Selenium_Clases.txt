@@ -1,0 +1,194 @@
+
+------------------------------------------ ¿Que es Selenium? ------------------------------------------------
+
+Selenium es un IDE que ayuda a la ejecucion automatica para entornos WEB, en donde nosotros despues de 
+desarrollar un proyecto de Spring o Springboot nos ayudara a hacer pruebas durante la ejecución del proyecto
+en forma de "Usuario" y haciendo que cada prueba pueda ser una validación para el proyecto
+
+En este caso lo que tenemos que hacer es descargar los controladores de Java para Selenium en donde podamos
+agregarlos a nuestro proyecto y ademas tenemos que descargar el Driver para el Browser en el que vamos a 
+realizar las pruebas, para eso sigamos los siguientes links 
+
+
+	https://www.selenium.dev/downloads/
+	https://sites.google.com/chromium.org/driver/
+
+
+Una vez que tengamos nuestro proyecto creado tendremos que instalar las dependencias en nuestro proyecto
+así que lo que haremos es que una vez que tengamos el proyecto en la carpeta src vamos a crear una nueva
+carpeta y la llamaremos "selenium-[Numero de version]" y ahí adentro copiaremos y pegaremos el archivo JAR
+que descargamos de la pagina.
+
+
+	https://www.youtube.com/watch?v=ZQZgXzXT8wE&list=PLgHCrivozIb3OPj61GmIIwXFqPrDI12vJ&index=13
+
+
+Para saber más como hacer la instalación de Selenium a IntelliJ ver el siguiente video:
+
+
+	https://www.youtube.com/watch?v=ZQZgXzXT8wE&list=PLgHCrivozIb3OPj61GmIIwXFqPrDI12vJ&index=19
+
+
+
+
+
+Instalación de Cucumber para IntelliJ en el siguiente enlace:
+
+	(NOTA: Antes de instalar cucumber en nuestro IntelliJ es necesario instalar tambien el plugin de Gherkin
+		antes de instalar Cucumber para Java)
+	
+	https://www.youtube.com/watch?v=gjFY_Gfrs6o&t=1s
+
+
+
+	Una vez instalado cucumber nos vamos a la pagina
+
+	mvnrepository.com
+
+
+
+	Buscamos por cucumber, una vez encontrada la busqueda seleccionamos los 3 tipos de cucumbers necesarios por
+	el propietario info.cukes
+
+		1.- cucumber-java
+		2.- cucumber-junit
+		3.- cucumber-core
+		4.- cucumber-jvm-deps
+		5.- gherkin
+
+	Seleccionamos los servicios 1.2.5 y descargamos sus archivos JAR:
+
+	https://mvnrepository.com/artifact/info.cukes/cucumber-junit/1.2.5
+	https://mvnrepository.com/artifact/info.cukes/cucumber-java/1.2.5
+	https://mvnrepository.com/artifact/info.cukes/cucumber-core/1.2.5
+	https://mvnrepository.com/artifact/io.cucumber/cucumber-jvm-deps/1.0.6
+	https://mvnrepository.com/artifact/io.cucumber/gherkin/15.0.2	
+
+	Agregamos los archivos JAR a nuestro proyecto
+
+	vamos a File/project structure/libraries
+
+		damos al signo de más [+] y seleccionamos la hubicacion de los archivos JAR, le decimos a que 
+		proyecto se le agregaran las librerias y listo
+
+
+
+
+
+
+------------------------------------------- Crear un archivo Cucumber -----------------------------------------------
+
+Para crear un archivo tipo cucumber nosotros tenemos que crear un archico de tipo File pero con la extension .feature
+que es la extension que permite identificar un archivo cucumber, siempre un archivo cucumber debe de tener una unica 
+caracteristica especifica, un solo requisito para la aplicación por documento pero esta caracteristica especifica
+puede tener diferentes escenarios.
+
+
+1.- [Describir el escenario]
+
+  # Cada caracteristica contiene una sola caracterisita
+  Feature: Test the login functionality
+
+  #Una caracteristica puede tener diferentes escenarios
+  #Los escenarios usan estructuras de tipo Given-When-Then 
+  Scenario: the user should be able to login with correct username and correct password
+    Given user is on the login page
+    When user enters correct username and correct password
+    Then user get confirmation
+
+
+2.-[Escribimos los pasos para definir la clase]
+
+De esta manera enlazamos las caracteristicas de nuestro archivo Cucumber con una clase de nuestro proyecto de Java
+
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class BDDLogin{
+
+    //Given user is on the login page
+    @Given("^user is on the login page$")
+    public void user_is_on_the_login_page(){
+        System.out.println("In Given");
+    }
+    //When user enters correct username and correct password
+    @When("^user enters correct username and correct password$")
+    public void user_enters_correct_username_and_correct_password(){
+        System.out.println("In When");
+    }
+    //Then user get confirmation
+    @Then("^user get confirmation$")
+    public void user_get_confirmation(){
+        System.out.println("In When");
+    }
+
+}
+
+
+
+3.-[Correr nuestra prueba en un nuevo packete en una nueva clase]
+
+
+@RunWith(Cucumber.class) //<------ El tipo de prueba que usaremos
+@CucumberOptions(features="features",glue="stepImplementations") // Primer parametro indica el nombre de nuestra
+								 // carpeta de escenarios cucumber y el segundo indica
+								 // el packete en donde se encuentra la clase que une
+								 // cucumber con nuestro proyecto java
+public class LoginTestRunner{
+
+}
+
+
+Listongo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

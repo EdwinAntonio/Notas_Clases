@@ -1,0 +1,1319 @@
+
+	---------------------------- Babel
+
+Para la transcripcion de código HTML a código JS podemos utilizar Babel el cual es muy eficiente para transcribir
+codigo de un lenguaje a otro:
+
+	https://babeljs.io/
+
+	ejemplo:
+
+	<h1 className="something"> Heading </h1>	---------> 	/*#__PURE__*/
+									React.createElement("h1", {
+									  className: "something"
+									}, " Heading ");
+
+
+	(NOTA: Todas las terminaciones deben de terminar siempre con </[Nombre]>, babel no soporta objetos
+		sin cerrar como <BR>, en cuyo caso terminaria siendo </BR>)		
+
+
+
+	---------------------------- Recursos del curso
+
+	https://github.com/in28minutes/full-stack-with-react-and-spring-boot
+
+En la liga anterior encontraremos todo lo necesario para el curso de Springboot con React, desde los problemas ya
+resueltos hasta la instalación de ciertas herramientas como NPM, NodeJs, VSCode, etc...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------- npm Install -----------------------------------------------------
+
+Para inicia instalamos primero NodeJs del siguiente enlace:
+
+	https://nodejs.org/es/download/
+
+Despues descargamos el node para la version más aceptable a nuestro SO, en este caso nosotros elegimos Windows msi
+x64, una vez instalado para saber que tenemos correctas las versiones lo checamos con:
+
+	npm -v
+	node -v
+
+
+Para agregar npm a nuestros nuevos proyectos hacemos la siguiente linea de comandos:
+
+	npm install jquery
+
+Y por ultimo los modulos de node, para eso usamos el comando:
+
+	npm install 
+
+Listongo! :D
+
+
+
+
+
+
+------------------------------------ Creacion de una App en React simple --------------------------------------------
+
+Para crear las dependencias de React en un nuevo proyecto utilizamos la sintaxis:
+
+	npx create-react-app [Nombre de la app]
+
+Para poder ejecutar el proyecto hay que tener en cuenta que debemos de estar dentro del proyecto primero, asegurate
+de estar en el dando la tecla pwd y una vez en el proyecto ejecutamos la linea:
+
+	npm start
+
+
+	(NOTA: React ya no genera componentes de tipo Class, ahora genera componentes de tipo Function y nosotros
+		requerimos de una clase, por tal motivo hay que cambiar el App.js por el siguiente código)
+
+
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+ 
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.js</code> and save to reload.
+        </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+        </a>
+        </header>
+      </div>
+    );
+  }
+}
+export default App;
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------- Components -----------------------------------------------------
+
+Para poder crear un nuevo componente dentro de react solo es necesario que en nuestra View o nuestra clase hagamos
+una implementación a nuestro componente:
+
+	class [Nombre/App] extends Component(){
+		....
+	}
+
+Y después hacer referencia a ese componente con un render:
+
+	render(){
+	  return(
+	     ...
+	  );
+	}
+
+Y para hacer referencia a ese nuevo componente lo mandamos a llamar dentro de un render de la siguiente manera:
+
+    class [Nombre/App] extends Component(){  // <----- Todos los nuevos componentes deben iniciar con 1 Mayuscula
+	render(){
+	  return(
+	     <div>
+		....
+		<App></App>
+	     </div>
+	  );
+	}
+    }
+
+
+
+
+
+
+
+	---------------------------------------- Function Components
+
+
+Normalmente ya vimos como crear un componente con una clase, ahora lo que haremos es crear un componente con una
+función, es más sencillo de programar e inclusive funcionan igual, para eso solo tenemos que crearlo de la siguiente
+manera, nos ahorra la función render y la extension:
+
+
+    function [Nombre/App](){  // <----- Todos las nuevas funciones deben iniciar con 1 Mayuscula
+	  return(
+	     <div>
+		....
+		<App></App>
+	     </div>
+	  );
+    }
+
+
+
+
+
+
+
+	---------------------------- Refactoring components
+
+Una buena practica para crear componentes es que no se dejen todos dentro de nuestro archivo main, para eso crearemos
+un nuevo folder en donde nosotros estaremos creando cada uno de los componentes que queramos y solo mandarlos a 
+llamar dentro de nuestra main app, para eso hacemos lo siguiente:
+
+
+	1.- Creamos un nuevo folder dentro de src
+
+		src/components/[Nombres/learningn-components]/[Componente/firstcomponent.jsx]
+
+	2.- Dentro de nuestro archivo JSX, creamos cada componente de la siguiente manera:
+
+		import React, { Component } from 'react'    // <------- Usamos Component si utilizamos una extension
+
+		//Class Component
+		export default class FirstComponent extends Component{
+		  render(){
+		    return(
+			<div className="firstComponent">
+			    Hello World First!
+			</div>
+		    );
+		  }
+		}
+
+		ó
+
+		import React from 'react' // <------- No usamos Component ya que no ocupamos su extension
+
+		function [Nombre/App](){  // <----- Todos las nuevas funciones deben iniciar con 1 Mayuscula
+	  	  return(
+	     	    <div>
+			....
+		    	<App></App>
+	     	    </div>
+	  	  );
+    		}
+
+
+	3.- Dentro de nuestro archivo MAIN mandamos a importar la ruta donde se encuentran creados los components
+
+		import FirstComponent from './components/learning-components/FirstComponent'
+
+
+	4.- Mandamos llamar al componente como siempre
+
+		<FirstComponent></FirstComponent>
+
+
+	(NOTA: Cuando no utilizamos el default en la opción 2, para mandar a importar ese componente en el doc MAIN
+		se debe de poner entre llaves, así { FirstComponent } al importar la libreria de ese componente)
+
+
+	(NOTA #2: Cuando creamos una funcion dentro de una clase, no necesitamos agregar la palabra reservada 
+		function)
+
+
+	class Counter extends Component{  // <----- Todos las nuevas funciones deben iniciar con 1 Mayuscula
+  	    render(){
+    	    return(
+        	<div className="counter">
+            	  <br/>
+            		<button onClick={increment}>+1</button>
+            		<span className="count">0</span>
+        	</div>
+  	    );
+    	    }
+    
+    	    increment(){
+    		console.log('Increment');
+    	    }
+	}
+
+	export default Counter
+
+
+
+
+
+
+	-------------------------------- Refactorin code
+
+Una de las mejores practicas al momento de mandar a definir variables dentro de una clase, es haciendolo mediante
+constructor, en donde vamos a inicializar las varaibles que queramos dentro de la sentencia 'state' y las cuales
+nos facilitan el trabajo en esa clase, tener en cuenta que siempre que se crea un constructor, este debe de llevar
+inmediatamente el metodo 'super()' para la lectura de cada sentencia, ejemplo:
+
+
+	 constructor(){
+          super();
+          this.state = {
+              conter: 0
+          }
+      	}
+
+
+
+
+	------------------------------ Unir funciones en un constructor
+
+Para poder evitar errores de "Cannot read property ..." de una funcion, se crea dentro del constructor una referencia
+a cada uno de los metodos o funciones que se encuentran dentro de nuestra clase para que puedan combinarse con el
+constructor, para eso usamos el metodo 'bind' dentro del constructor, ejemplo:
+
+	constructor(){
+          super();
+          this.state = {
+              conter: 0
+          }
+          this.increment = this.increment.bind(this) //<--- Asi se combina una funcion con el constructor
+      	}
+
+
+También podemos utilizar lambda para poder hacer la unificacion de los metodos con nuestra clase, para ello solo
+tenemos que hacer un cambio con la creación de la clase de la siguiente manera:
+
+	constructor(){
+          super();
+          this.state = {
+              conter: 0
+          }
+          //this.increment = this.increment.bind(this) //<--- Asi se combina una funcion con el constructor
+      	}
+	....
+	increment = () => {
+          this.setState({
+            conter: this.state.conter + 1
+          });
+    	}
+
+
+
+
+
+
+
+
+	------------------------------- Union entre funciones padres e hijas
+
+
+Para fucionar la funcion entre una clase padre y una hija se tiene que hacer referencia al mismo constructor y a los
+mismos metodos solo que aqui la clase padre manda a llamar los methodos de la clase hija, como en el siguiente
+ejemplo:
+
+
+1.- [En nuestro render de la clase Padre (La que retorna el valor)]
+
+      render() {
+      return (
+        <div className="counter">
+            <CounterButton by={1} incrementMethod={this.increment}></CounterButton>
+            <CounterButton by={5} incrementMethod={this.increment}></CounterButton>  //El metodo hijo incrementMethd
+            <CounterButton by={10} incrementMethod={this.increment}></CounterButton> //Llamamos a un metodo hijo
+            <span className="count">{this.state.conter}</span>
+        </div>
+      );
+    }
+      increment(by){
+        this.setState({
+            conter: this.state.conter + by
+        });
+    }
+
+
+2.- [En nuestra clase hijo]
+
+    render(){
+    return(
+        <div className="counter">
+            <br/>
+            <button onClick={this.increment} >+ {this.props.by}</button>
+            //<span className="count">{this.state.conter}</span> //<---- Se usa como testing nada más no tiene relev
+        </div>
+  	    );
+    }
+    
+    increment(){
+        this.setState({
+            conter: this.state.conter + this.props.by
+        });
+        this.props.incrementMethod(this.props.by);  // En la clase hija se crea un metodo que llamara la clase padre
+    }
+
+
+
+	(NOTA: Una buena practica es que en todos los setStates se manejen en forma de lambda para facilitar su
+		comportamiento, ejemplo)
+
+	
+	increment(by){
+        this.setState(
+            () => {
+            	return {conter: this.state.conter + by}
+           });
+    	}
+
+
+	ó
+
+	increment(by){
+        this.setState(
+            (inc) => { //<-------- Dentro del parentesis podemos sustituir la referencia de this.state por cualquiera
+            	return {conter: inc.conter + by}
+           });
+    	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------- Combinando funciones para Spring Boot -----------------------------------
+
+
+Para realizar proyectos con Springboot en donde ocupemos ya un formulario, una conexion a una base de datos, el
+cambio de datos dentro de una variable, todo eso se genera conforme a sintaxis de estrada de datos por parte del
+usuario, por tal motivo en este momento ocupamos agregar sintaxis de entrada a inputs y para ello se usa lo
+siguiente:
+
+	
+1.- [Declaramos las variables de nuestra clase]
+
+	constructor(props){
+        super(props)
+
+        this.state = {
+            username: 'edwin',
+            password: ''
+        }
+        this.handlePasswordChange = this.handlePasswordChange.bind(this) // <---- Los metodos de clases que ocupemos
+        this.handleUsernameChange = this.handleUsernameChange.bind(this)
+    	}
+
+2.- [En los input especificamos los tipos de entrada de datos]
+
+
+	render(){
+        return(
+            <div>
+            <br/>
+            User Name: <input type="text" name="userName" 
+                        placeholder="Insert your username" 
+                        value={this.state.username} 
+                        onChange={this.handleUsernameChange}/>
+
+            Password: <input type="password" name="password" 
+                        placeholder="Insert password"
+                        value={this.state.password} //<--- El valor de entrada en donde se almacenara
+                        onChange={this.handlePasswordChange}/> //La clase que usaremos el cambio de dato en la variabl
+            <div>
+                <br/>
+                <button>Login</button>
+            </div>
+            </div>
+        )
+    }
+
+
+
+3.- [Creamos nuestras clases para la insersion de datos a nuestras variables]
+
+    handleUsernameChange(event){
+        this.state({username: event.target.value})
+    }
+
+    handlePasswordChange(event){
+        this.state({password: event.target.value})
+    }
+
+
+
+
+
+
+
+
+	------------------------ Refactoring Code
+
+En el ejemplo anterior podemos hacer un refactor al codigo y de esa manera podemos tener menos código al momento de
+realizar procesos que realicen la misma funcion pero con diferentes variables, como en este caso de Login, ejemplo
+
+En vez de utilizar 2 metodos podemos sustituirlo por 1 solo y usar el siguiente argumento
+
+	handleUsernameChange(event){
+        	this.state({username: event.target.value})  // <--- Antes
+    	}
+
+			---------------------	
+
+	handlChange(event){
+        	this.state({ [event.target.name] : event.target.value}) // <--- Despues
+    	}
+
+En vez de poner el nombre de la varibale ponemos el argumento que nos dice que tomara el nombre de nuestro objeto, en
+este caso del input que tiene como nombre "username", este parametro tomara ese nombre y lo comparara con el nombre
+de una variable que tengamos inicializada en nuestro constructor
+
+	(NOTA: Este metodo solo funciona cuando el nombre de la variable y el nombre del objeto son el mismo, de caso
+		contrario se utilizaria la primera forma en vez de la 2da)
+
+	<input type="text" name="username" //<--- Nombre de nuestro objeto de entrada
+                        placeholder="Insert your username" 
+                        value={this.state.username} 
+                        onChange={this.handlChange}/> //<---- Cambiamos el onChange con nuestro nuevo method
+
+
+	constructor(props){
+        super(props)
+
+        this.state = {
+            username: 'edwin',  // <--- Nombre de la variable es igual que el del objeto
+            password: ''
+	    ...
+        }
+	...
+
+
+
+
+
+
+
+
+
+	------------------------------ Agregando codificacion para Login
+
+
+Para mandar a llamar a funciones dentro de nuestro login tenemos que crear las variables que ocuparemos para mostrar
+el estado del login en este caso para realizar las siguientes credenciales ocupamos lo siguiente:
+
+1.-[Variables de estado de los mensajes]
+
+	this.state = {
+            ...
+            hasLoginMessage: false,
+            showLoginMessage: false
+        }
+
+
+2.-[Creamos un metodo para el login]
+
+	loginMethod(){
+        if(this.state.username==='edwin' & this.state.password==='123'){
+            console.log('Successful');
+            this.setState({showLoginMessage: true})
+            this.setState({hasLoginMessage: false})
+        }
+        else{
+            this.setState({hasLoginMessage: true})
+            this.setState({showLoginMessage: false})
+        }
+    	}
+
+3.- [Creamos funciones para el estado del login]
+
+
+	function ShowInvalidCredentials(props){
+    	if(props.hasLoginMessage){
+        	return <div>Invalid Credencials</div>
+    	}
+    	return null
+	}
+
+	function ShowValidCredentials(props){
+    	if(props.showLoginMessage){
+        	return <div>Loggin Success</div>
+    	}
+    	return null
+	}
+
+4.- [Refacturamos nuestro código en el main]
+
+	render(){
+        return(
+            <div>
+            ....
+                {/*<div>Invalid Credencials</div>
+                <ShowInvalidCredentials hasLoginMessage={this.state.hasLoginMessage}/>*/}
+
+                {this.state.hasLoginMessage && <div>Invalid Credencials</div>}
+                {this.state.showLoginMessage && <div>Login Success</div>}
+
+                {/*<div>Loggin Success</div>
+                <ShowValidCredentials showLoginMessage={this.state.showLoginMessage}/>*/}
+            <div>
+                <br/>
+                <button onClick={this.loginMethod}>Login</button>  //<--- Agregamos el methodo para la funcion login
+            </div>
+            </div>
+        )
+    }
+
+
+
+	(NOTA: Hay un echo muy curioso con JavaScript cuando usamos el termino 
+	{this.state.hasLoginMessage && <div>Invalid Credencials</div>} lo que hace es que si el resultado del lado
+	izquierdo llega a ser verdadero, mostrara lo que tengamos del lado derecho, pero si el resultado del lado
+	izquierdo llega a ser falso, no mostrara nada del lado derecho, de esa forma nos ahorramos el paso 3)
+
+
+
+
+
+
+
+
+
+
+
+	------------------- Usando el Router para cambiar de pagina o componentes
+
+Para poder nosotros enlazar una RUTA para cambiar de pagina o para poder cambiar de componentes cuando estos sean 
+requeridos, entonces haremos uso de la libreria [react-router-dom] el cual nos ayudara siempre a poder enlazar una
+ruta de una clase a otra o entre componentes, para eso realizamos lo siguiente:
+
+1.-[Instalar las librerias necesarias de Router]
+
+	Nos vamos a nuestro proyecto en la terminal y descargamos las librerias con el comando:
+
+		npm add react-router-dom
+
+2.-[Importar la libreria a nuestra clase]
+
+	import {BrowserRouter as Router, Route} from 'react-router-dom'
+
+
+3.- [Hacemos los enlaces de la siguiente manera]
+
+  class TodoApp extends Component{
+    render(){
+        return(
+            <div className="todoApp">
+                <Router>
+                    <Route path="/welcome" component={Welcome}/>
+                </Router>
+                My Todo Application
+                <LoginComponent/>
+		....
+            </div>
+        )
+    }
+  }
+ 
+
+
+
+	(NOTA: En caso de que queramos anotar más de 2 <Route> dentro de un <Router> entonces tenemos que encerrar
+		los Route dentro de la notacion <></>, ejemplo)
+	
+		<Router>
+		    <>
+                    <Route path="/welcome" component={WelcomeComponent}/>
+                    <Route path="/login" component={LoginComponent}/>
+		    </>
+                </Router>
+
+
+
+
+
+
+
+
+
+
+
+	--------------------- Asignando un cambio de pagina dentro de un metodo o funcion
+
+
+Para nosotros mandar a decir mediante un metodo o función a la libreria Router que queremos cambiar o dirigirnos a 
+otra pagina es un proceso sencillo de hacer y para eso ocuparemos la sintaxis:
+
+	this.props.history.push("/[Nombre_del_Componente]")
+
+
+Como ejemplo estaremos usandolo dentro de un login
+
+    loginMethod(){
+        if(this.state.username==='edwin' & this.state.password==='123'){
+            console.log('Successful');
+            this.props.history.push("/welcome")
+        }
+        else{
+            this.setState({hasLoginMessage: true})
+            this.setState({showLoginMessage: false})
+        }
+    }
+
+Para saber más sobre los diferentes usos de la libreria Router, podemos enlazarnos al siguiente link:
+
+
+	https://github.com/ReactTraining/history/blob/master/docs/api-reference.md 
+
+
+
+
+
+
+
+
+
+
+
+
+	-------------------------------- Crear un componente de Error en caso de Not Page Found
+
+
+1.-[Creamos un metodo para nuestra función]
+
+  function NotFound() {
+        return(
+            <div>
+                Something is Wrong, this page was not found! :(
+            </div>
+        )
+  }
+
+2.-[Re-estructuramos nuestra aplicación MAIN]
+
+	<div className="todoApp">
+                <Router>
+                    <>
+                      <Switch>  // <---- Agregamos la etiqueta Swtich para en caso de no tener el "path" utilizado
+                        <Route path="/" exact component={LoginComponent}/>
+                        <Route path="/welcome" component={Welcome}/>
+                        <Route path="/login" component={LoginComponent}/>
+                        <Route component={NotFound}/>
+                      </Switch>
+                    </>
+                </Router>
+                {/*<LoginComponent/>*/}
+            </div>
+
+
+
+
+	(NOTA: La notacion Switch nos ayuda a que todos aquellos componentes que usen o no una ruta [path] pueda 
+		entender que cada uno de estos elementos de Route serán un componente distinto cuando sean llamados)
+
+
+	(NOTA #2: Para insertar una ruta dentro de un <a href></a> se hace de la siguiente manera)
+
+
+	<a href="/[Nombre_ruta]">[Palabra]</a>
+
+	Pero para evitar el andar refrescando a cada rato la pagina es preferible hacerlo con Link, así
+
+	import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom'
+	
+	<Link to="/[Nombre_ruta]">[Palabra]</Link>	
+
+
+
+
+
+
+
+
+
+
+	----------------------- Diseño con Bootstrap
+
+Para poder generar un diseño a nuestra pagina uno de los mejores frameworks que se pueden implementar y que es de los
+que esta tomando fuerza hoy en día, para crear un diseño para una tabla se hace de la siguiente manera:
+
+
+1.-[Copiar la URL del siguiente enlace]
+
+	https://unpkg.com/bootstrap@4.1.0/dist/css/bootstrap.min.css
+
+2.-[Crear un archivo css en nuestro src y lo llamaremos bootstrap.css]
+
+Dentro de nuestro archivo bootstrap.css importamos la libreria de Bootstrap con la linea:
+
+	@import url(https://unpkg.com/bootstrap@4.1.0/dist/css/bootstrap.min.css);
+
+3.-[Importamos Bootstrap en nuestro archivo main]
+
+	import './bootstrap.css';
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	-------------------------- Mostrar un nombre logueado en el browser
+
+
+1.-[Modificamos el history de nuestro methodo]
+
+	this.props.history.push(`/welcome/${this.state.username}`)
+
+Para hacer referencia a una variable usamos el signo de pesos '$' seguido de las llaves y la variable
+
+
+2.-[Modificamos nuestra ruta]
+
+	<Route path="/welcome/:name" component={Welcome}/>
+
+Esto dira el tipo de componente que se mostrara en el browser y Listongo! :D
+
+
+	(NOTA: Si queremos mostrar el nombre o el complemento en la pagina y no en la barra del browser usamos la
+		siguiente sintaxis junto al parametro que especificamos en el <Route>)
+
+
+	{this.props.match.params.name}
+
+	Ejemplo:
+
+	class Welcome extends Component{
+    	render(){
+          return(
+            <div>
+                {this.props.match.params.name} say Welcome to everybody! :D
+            </div>
+             )
+   	  }
+	}
+
+
+	
+
+
+
+
+
+
+
+	-------------------- Creando formulario de listas en React
+
+
+Para crear un formulario o una lista, se recomienda que en vez de crear una funcion, se recomienda que sea una clase
+en vez de una función, para que podamos recouperar datos de esta clase mediante un constructor, para hacer una lista
+o formulario se hace con los siguientes pasos
+
+1.-[Diseñamos la ruta en donde mostraremos la información]
+
+	        <Router>
+                    <>
+                    <Switch>
+                	...
+		        <Route path="/todos" component={ListTodoComponent}/>
+                        ...
+                    </Switch>
+                    </>
+                </Router>
+
+
+2.- [Diseñamos la clase]	
+
+  class ListTodoComponent extends Component{
+    constructor(props){
+        super(props)
+        this.state = {
+            todo : { id: 1 , description: 'Learn React'} //<--- Asi creamos un objeto en react
+        }
+    }
+    render(){
+        return(
+            <div>
+                <h1>List Todo</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{this.state.todo.id}</td>
+                            <td>{this.state.todo.description}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        )
+    }
+  }
+
+
+
+	(NOTA: Para la creacion de un arreglo de objetos se hace de la siguiente manera)
+
+	this.state = {
+            todo : [{ id: 1 , description: 'Learn React'},
+                    { id: 2 , description: 'Learn Springboot'},
+                    { id: 3 , description: 'Learn Valorant'}]
+        }	
+
+
+	Para mandarlo a llamar cada uno de los objetos se hace con lambda de la siguiente manera
+
+	<table>
+           <thead>
+		...
+	   </thead>
+           <tbody>
+             {
+               this.state.todo.map( //Llamamos a lamda como si fuera un forEach pero para objetos
+                  todo => 
+                  <tr key={todo.id}> //En caso de tener un Id es recomendable usar key y el campo de la variable
+                                <td>{todo.description}</td>
+                                <td>{todo.done.toString()}</td>
+                                <td>{todo.date.toString()}</td>
+                  </tr>
+                )
+             }
+           </tbody>
+        </table>
+
+
+
+
+
+
+
+
+
+
+	------------------------------ Uso de almacenamiento de datos para Logins
+
+Para usar el alamacenamiento localo por parte del Browser podemos realizar mini pruebas de conexion a una base de
+datos y para eso hacemos lo siguiente:
+
+
+1.-[Creamos una nueva clase de peticion de login]
+
+class AuthenticationService{
+    registerSuccessfulLogin(username,password){
+        sessionStorage.setItem('authenticatedUser',username);
+    }
+}
+
+export default AuthenticationService
+
+
+2.- [Utilizamos el mehtodo en nuestra clase principal]
+
+	 AuthenticationService.registerSuccessfulLogin(this.state.username,this.state.password);
+
+
+3.-[En caso de hacer un Logout vamos a nuestra clase de authenticacíon y ponemos]
+
+
+class AuthenticationService{
+    registerSuccessfulLogin(username,password){
+        sessionStorage.setItem('authenticatedUser',username);
+    }
+
+    logout(){
+        sessionStorage.setItem('authenticatedUser');
+    }
+}
+
+ Y mandamos a llamar al methodo con un 'onClick={AuthenticationService.logout}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	---------------------- Seguridad a las Rutas 'AuthenticatedRoute'
+
+Para nosotros poder generar seguridad a lo que vienen siendo las rutas del metodo Route tenemos que cambiar Route
+por un nuevo componente, que llamaremos AuthenticatedRoute, como se muestra en el siguiente ejemplo
+
+1.-[Creamos una nueva clase para validar autenticaciones tipo jsx]
+
+import React, {Component} from 'react'
+import { Redirect, Route } from 'react-router'
+import AuthenticationService from './AuthenticationService'
+
+
+class AuthenticatonRoute extends Component{
+    render(){
+        if(AuthenticationService.isUserLoggedIn()) return <Route {...this.props}/>
+        return <Redirect to="/login"/>
+    }
+}
+
+export default AuthenticatonRoute
+
+
+2.-[Cambiamos los componentes Route de nuestra pagina MAIN por nuestro nuevo componente AuthenticationRoute]
+
+	(NOTA: Hay que agregar el nuevo componente a cada path que deseemos que contentga esta configuracion)
+
+class TodoApp extends Component{
+    render(){
+        return(
+            <div className="todoApp">
+                <Router>
+                    <>
+                    <HeaderComponent/>
+                    <Switch>
+                        <Route path="/" exact component={LoginComponent}/>
+                        <Route path="/login" component={LoginComponent}/>
+                        <AuthenticatonRoute path="/logout" component={Logout}/> //<---- De esta manera
+                        <AuthenticatonRoute path="/welcome/:name" component={Welcome}/>  //<---- De esta manera
+                        <AuthenticatonRoute path="/todos" component={ListTodoComponent}/> //<---- De esta manera
+                        <Route component={NotFound}/>
+                    </Switch>
+                    <FooterComponent/>
+                    </>
+                </Router>
+                {/*<LoginComponent/>*/}
+            </div>
+        )
+    }
+}
+
+
+
+
+
+	(NOTA: En caso de que no se actualice inmediatamente el Header, realizar la siguiente configuracion)
+
+
+	You can modify the default export as shown below:
+
+		import { withRouter } from 'react-router';
+ 
+		class HeaderComponent extends Component {
+ 
+		{/*...Header component code ....*/}
+ 
+		}
+ 
+		export default withRouter(HeaderComponent);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------ Web Service con SpringBoot y React ---------------------------------------
+
+Que significa REST? REpresentational State Transfer es un protocolo HTTP (Hyper Text Transfer Protocol) para hacer 
+		    peticiones y respuestas a un servicio web (Request and Responses)
+
+
+
+
+	------------------ Recomendaciones de Springboot
+
+
+	Al momento de insertar dependencias con https://start.spring.io/ se recomiendan las principales que son
+
+		1.- Spring Web
+		2.- JPA
+		3.- DevTools
+		4.- h2 Database
+
+
+
+
+	--------------------- IntelliJ
+
+Para importar nuestro nuevo proyecto debemos de abrir IntelliJ e irnos a la opcion que dice: 
+		
+	File/new/Module From Existing Sources
+
+Una vez seleccionado nuestro proyecto damos click en importar modulos de forma externa y seleccionamos Maven
+Damos en Finish y listongo, esperamos a que terminen de descargarse las dependencias
+
+
+
+
+
+
+
+
+
+	----------------- COnfigurar el puerto del front-end en nuestro proyecto
+
+
+Nos vamos a nuestro archivo package.json y en la seccion donde dice "scripts" nos vamos a la opcion del objeto que 
+dice "start" y en la misma linea de código sin alterar nada, agregamos la sintaxis:
+
+	PORT=[Numero que queramos]
+	
+	"PORT=4200 react-script start"
+
+
+
+
+
+
+
+	------------------- Agregando axios para la configuracion de nuestras peticiones Front-end
+
+Que son los axios?
+
+Son las peticiones o conexiones API para capturar y mostrar datos de un usuario en nuestro front-end
+normalmente en nuestros proyectos cuando hacemos una conexion la hacemos en nuestro servidor back-end y para
+mostrarlo en nuestro front-end necesitamos los axios los cuales mediante las peticiones y junto a la capa
+de service de nuestro proyecto podemos mandar a mostrar esos datos
+
+
+Para utilizar dependencias de nuestro axios en nuestro proyecto, debemos de entrar dentro del proyecto
+y mediante la terminal descargar las librerias de nuestro axio el cual usamos el siguiente comando:
+
+	npm add axios
+
+La libreria que usamos para importar los axios es:
+
+	import axios from 'axios'
+
+
+
+
+
+
+
+
+	-------------------------- Error CORS (Capitulo 67)
+
+Si se nos llega a presentar el error CORS en nuestro proyecto, esto se debe a que en la capa del controlador
+no le estamos especificando a Spring que los datos van a pasarse a otro servidor web, o en este caso a nuestro
+proyecto en Front-end, por tal motivo hay que especificarle el nuevo puerto y usando  @CrossOrigin, ejemplo:
+
+
+	@CrossOrigin(origins="http://localhost:4200")
+	public class [Nombre]{
+		...
+	}
+
+
+
+
+
+	----------------------------- Promise (Promesa)
+
+Una promesa es una llamada a nuestro back-end para que despues de una cierta accion este pueda realizar otro 
+proceso una vez que termine de realizarse la peticion principal, es una finalizacion eventual de una operacion
+asyncrona basicamente nos ayuda a que una peticion asincrona que es lo que debe de hacer cuando la peticion es
+exitosa o que debe de hacer cuando este genera un error, como la siguiente sintaxis:
+
+
+	asyncCallPromise().then( response => doWhat(response)).catch(error=>handleError(response))
+
+
+	(NOTA: Para mas informacion de Axios, ver en la pagina github.com/axios/axios)
+
+
+
+
+	------------------------------- Formik (80)
+
+Formik es una libreria que nos ayuda a gestionar mejor el manejo de formularios dentro de nuestro proyecto cuando
+implementamos la notacion Formik en nuestro HTML
+
+
+
+
+
+
+
+
+	--------------------------------- Llamando un JSON Api desde nuestro Front-end React (69)
+
+
+	--------------------------------- Respuestas de Error con axios desde nuetro Front-end (71)
+
+
+	--------------------------------- Diseñando un Restful para un TODO (73)
+
+
+
+	--------------------------------- Usando validaciones con Formik para Back-end (83)
+
+
+
+	--------------------------------- Creando un SpringBoot REST API (84-88)
+
+
+
+	--------------------------------- Usando Seguridad basica con JWT (89)
+
+
+
+	--------------------------------- Deshabilitar la seguridad CSRF y habilitar opciones de Peticiones (94)
+
+La seguridad CSRF o Cross Site Request Forgery, es utilizada para evitar la injeccion de código HTML por parte de 
+otro usuario a nuestro servicio web, normalment ees utilizado para formularios en caso de que alguien se quiera hacer
+pasar por un usuario que no tengamos en nuestro servicio de datos almacenados.
+
+
+
+	--------------------------------- Spring con uso de JWT (JSON Web Token) (99)
+
+Es un framework estándar que define un mecanismo para poder propagar la identidad de un usuario entre dos partes, y 
+de forma segura, además con una serie de claims o privilegios y no contiene tiempo de expiracion. 
+Un JSON Web Token está formado por: 
+
+	1.- Datos (Payload): Datos del usuario y privilegios así como el resto de información.
+	2.- Firma (Signature): La firma es única y nos permite verificar que el remitente es quien dice ser, 
+	    además de que la data no se ha modificado en el camino, se utiliza HMACSHA256 para realizar un Hash, 
+	    incluyendo cifrado con el algoritmo  SHA de 256 bits
+
+
+	Podemo tener informacion de https://jwt.io sobre como funciona el token JWT
+
+
+
+	--------------------------------- Importando JWT con Eclipse (100-105)
+
+
+	
+	--------------------------------- Resolver algunos problemas de JWT (105)
+
+
+
+	--------------------------------- Usando JWT in React Front-end (106-108)
+
+
+
+	--------------------------------- Conectando REACT con GET REST API's y un repositorio JPA (110-114)
+
+
+
+
+
+
+
+
+	-------------------------------- Que es Spring Security?
+
+Spring Security es un framework de apoyo de Spring que provee una serie de servicios de seguridad destinados 
+principalmente, a comprobar la identidad del usuario mediante la autenticación y los permisos asociados al mismo 
+mediante la autorización.
+
+
+	-------------------------------- Springboot (114-116)
+
+Springboot es un framework de java que nos ayuda a crear microservicios de un sistema o proyecto 
+
+
+
+	-------------------------------- SpringBoot vs Spring vs Spring MVC (120)
+
+
+
+	------------------------ H2 features (129)
+Make the database URL a constant by configuring this in application.properties.
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.data.jpa.repositories.bootstrap-mode=default
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

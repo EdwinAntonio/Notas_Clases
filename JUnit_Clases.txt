@@ -1,0 +1,320 @@
+Testeo CMD
+
+netstat -o -n -a | findstr 0.0:8080
+taskkill /f /PID [puerto]
+
+--------------------------------- COnceptos de Eclipse a IntelliJ -------------------------------------------
+
+	Eclipse				IntelliJ
+
+	Workspace			Project
+	Project				Module
+	FaceT				FaceT
+	Library				Library
+	JRE				SDK
+	ClassPath Variable		Path Variable
+
+---------------------------------------- Configurando JUnit para IntelliJ -----------------------------------
+
+Para crear pruebas de testing con JUnit e inclusive Mockito, necesitaremos crear una nueva carpeta en nuestro
+proyecto la cual ira almacenando cada uno de los resultados y evaluando cada fase con estas herramientas para
+eso necesitamos ir a nuestro proyecto y hacer lo siguiente:
+
+	1.- [En src creamos una carpeta nueva y la llamamos test]
+	2.- Damos clickD y le decimos "Mark Directory as" y seleccionamos "Test Sources Root"
+	3.- Debemos de tener exactamente lo mismo en nuestra carpeta que vamos a testear
+	
+	---- Insertamos JUnit a nuestro proyecto ya que no viene por defecto
+	4.- Para eso nos vamos a "File" y seleccionamos "Project structure"
+	5.- nos vamos a "Libraris" y agregamos las librerias para JUnit, damos al simbolo + y seleccionamos
+	    maven
+	6.- En la barra de busqueda buscaremos org.junit.jupiter:junit-jupiter-api y buscamos las recientes
+	    (OJO: no seleccionar las que digan RC1 o M1 ya que esas son Release Content y presentan bugs)
+	    (NOTA: En caso de querer instalar JUnit4, recomendamos instalar junit:junit:4.10 ya que puede 
+	    	   usar correctamente @RunWith(Cucumber.class) sin problemas ;D )
+	7.- Despues de dar OK, nos dira a que proyecto agregara las librerias y damos OK
+	8.- Listongo, a comer! :D 
+
+
+
+Por si sirve de algo, en nuestro POM del proyecto podemos agregar la siguiente dependencia de la version 
+Maven que usaremos, haciendolo de la siguiente manera
+
+	<properties>
+	   ...
+	   <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
+	</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------ TDD (Test Drive Development) -------------------------------------
+
+El TDD es un proceso el cual va de la mano con las metodologias Agile, las cuales son una de las herramientas
+de proceso de trabajo que nos ayudara a validar cada una de las funciones del proyecto, siempre que estemos
+trabajando con una metodologia Agile, siempre o la gran mayoria de las veces nos vamos a ver involucrados
+con el proceso TDD para hacer pruebas en el proyecto.
+
+Hay que tener en cuenta que para que para poder tener una buena practica es necesario siempre empezar con los
+errores al momento del testing, siempre se debe de realizar el siguiente diagrama como buena practica.
+
+
+	1.-Errores --------> 2.- Los restultados esperados ---------> 3.- Refactorizar el código
+
+	(Red Circle)		      (Green Circle)			     (Reducir código)
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------ Reglas de un TDD -------------------------------------------
+
+	1.- Probar la salida esperada de un ejemplo
+	2.- No pre ajustar el código al ver un error.... dejemos que el Test Drive lo haga por nosotros
+	3.- Escribir el minimo codigo requerido para hacer que la prueba de exito a lo que queremos
+	4.- Cada test debe de validar 1 simple pieza logica y no más
+
+	Siempre es bueno comenzar con una marca de error para ver si funciona, para eso añadimos el
+	siguiente codigo por verificar que todo esta funcionando "bien" ya que nos tiene que marcar un error
+	de tipo Assert, si sale así es por que todo esta FINE! 
+
+	@Test
+	void contextLoads() {
+		fail();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------- Tipos de JUnit ----------------------------------------------
+
+Cuando utilizamos JUnit 4, las librerias tanto como algunas pequeñas sintaxis van a cambiar, normalmente para
+identificar que tipo de JUnit estamos utilizando usamos de referencia el nombre de las librerias, ejemplo:
+
+	JUnit 4: Utiliza la libreria [import static org.junit.Assert.*;]
+
+	JUnit 5: Utiliza la libreria [import static org.junit.jupiter.assert.*;]
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------- @Test -----------------------------------------------------
+
+La notacion @Test nos ayudara a poder decir dentro de nuestro paquete de testeo cuales son las funcines
+o procesos que se van a evaluar y siempre tienen que terminar con el metodo "assert[Valor]" el cual nos 
+ayudara a detectar el resultado esperado y hacer que las pruebas de testing se realicen de forma correcta.
+
+	(NOTA: Si en algún momento no agregamos la notación @Test entonces JUnit no va detectar ese proceso
+		y lo va a pasar por largo)
+
+Siempre hay que tener en cuenta que cuando hacemos prueba comencemos con los errores, despues los resultados
+esperados y al final tratar de reducir el codigo lo más que podamos pero que sigua arrojando los resultados
+esperados.
+
+
+Para validar una funcion dentro de un proceso solamente agregamos la notación @Test encima de nuestra 
+funcion, ejemplo:
+
+	@Test
+	public void testOne(){...}
+
+
+
+
+
+	--------------------------------- @Test con Exceptions
+
+Cuando validamos procesos o methodos dentro de nuestro proyecto, probablemente podamos tener como respuesta
+una excepción, para eso se tiene que especificar en el testing la excepcion esperada, peeeeeroooo.... la 
+notación cambia dependiento de la versión JUnit que estemos usando para hacer el TDD, para eso hay que tener
+en cuenta los siguientes puntos y códigos a escribir.
+
+
+	[JUNIT 4]
+
+	Cuando usamos esta version la forma de declarar un Testing para una excepción se hace de la siguiente
+	manera:
+
+	@Test(expected = NumberFormatException.class)
+	public void testOne(){....}
+
+
+	[JUNIT 5]
+
+	En esta version de JUnit lo que sucede es que ahora el proceso que nosotros queramos validar y que
+	probablemente genere una excepción debemos de meterlo dentro de un lambda y el primer parametro que
+	ponemos dentro del assertThrows es la clase de la excepción que nosotros estamos esperando.
+
+	Cuando usamos esta version la forma de declarar un Testing para una excepción se hace de la siguiente
+	manera:
+
+	@Test
+	public void testOne(){
+	
+		Boolean validator;
+		assertThrows(NumberFormatException.class,
+			() -> {
+				validator.getValue("123456789");
+				...
+			}
+			);
+	}
+
+
+
+Una de las cosas que hay que tener en cuenta es que cada vez que a nostros se nos genere un error en un campo
+de pruebas o testing, tenemos que validar cada uno de los puntos o funciones dentro de nuestra clase de 
+testing el cual nos apoyara mucho al momento de estar modificando código en nuestra clase main donde estamos
+programando todo, el testing nos ayudara a que cada sector de nuestro código cumpla con un porcentaje minimo
+establecido por la empresa.
+
+
+
+
+
+
+
+----------------------------------------- Buenas y malas practicas ------------------------------------------
+
+Una de las buenas practicas que debemos de tener es que al momento de que nosotros vayamos a programar un
+testing, siempre debemos de hacernos las siguientes preguntas:
+
+	1.- La logica de los metodos es correcta?
+	2.- Hace lo que tiene que hacer?
+	3.- Se han probado todos los casos?
+	4.- Se ha refactorizado correctamente el código de forma entendible?
+
+
+
+
+
+
+------------------------------------------- Mockito ---------------------------------------------------------
+
+Para crear un methodo con Mockito necesitamos especificarle a mockito, la clase que vamos a analizar y para
+eso se hace de la siguiente manera:
+
+	1.- [Inicializamos a Mockito para evaluar]
+
+	[MyClass] myClass = mock([MyClass].class);
+
+
+Cuando inicialicemos a Mockito, le especificamos cuando tiene que evaluar y que es lo que tiene que retornar
+al final, de la siguiente manera:
+
+	2.- [Indicamos cuando comenzar la implementacion de Mock para evaluar y que retornara]
+
+	when(myClass.[myMethod(params)]).thenReturn([return-value])
+
+	"Cuando una clase sea llamada con un methodo en particular, con ciertos parametros especificos, 
+	 entonces retorna este valor"
+
+
+Y una vez que recibimos la peticion del Mockito entonces la sintaxis para la validacion sera:
+
+	3.- [Validamos su resultado]
+
+	Verify([myClass], times()).[myMethod(params)];
+
+	"Cuando este el metodo con estos ciertos parametros de esta clase, se repita cierta cantidad de 
+	 veces entonces consideralo como resultado exitoso"
+
+Dentro del parametro de "times()" podemos cambiarlo por las siguientes condiciones:
+
+	1.- times(1)
+	2.- times(0)
+	3.- atLeast(3)
+	4.- atMost(7)
+	5.- never()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------- Cucumber ------------------------------------------------
+
+Cucumber es una herramienta de automatización de pruebas de software las cuales mediantes ciertas indicacione
+dadas por una serie de palabras reservadas, podemos darle una estructura de comportamiento automatico para
+realizar pruebas de nuestro proyecto web, en este caso los pasos para poder realizar una estructura en 
+cucumber es:
+
+	1.- Descripción de nuestra prueba	
+	2.- Nombre del escenario de cada Script
+	3.- Los pasos a seguir para cada una de las pruebas Script
+
+
+Cucumber por si solo una vez que nosotros realizamos nuestros script, nos generara automaticamente los
+metodos o funciones por cada paso de los scripts que nosotros especificamos donde lo recomendable es crear 
+una nueva clase donde almacenaremos todos nuestros metodos generados y programamos en cada uno de ellos lo
+que nosotros deseamos que haga ese metodo 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

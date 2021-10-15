@@ -1,0 +1,36 @@
+
+	https://github.com/in28minutes/full-stack-with-react-and-spring-boot
+
+En la liga anterior encontraremos todo lo necesario para el curso de Springboot con React, desde los problemas ya
+resueltos hasta la instalación de ciertas herramientas como NPM, NodeJs, VSCode, etc...
+
+
+-------------------------------------------------- npm Install -----------------------------------------------------
+
+Para inicia instalamos primero NodeJs del siguiente enlace:
+
+	https://nodejs.org/es/download/
+
+Despues descargamos el node para la version más aceptable a nuestro SO, en este caso nosotros elegimos Windows msi
+x64, una vez instalado para saber que tenemos correctas las versiones lo checamos con:
+
+	npm -v
+	node -v
+
+
+Para agregar npm a nuestros nuevos proyectos hacemos la siguiente linea de comandos:
+
+	npm install jquery
+
+Y por ultimo los modulos de node, para eso usamos el comando:
+
+	npm install 
+
+Listongo! :D
+
+
+
+
+
+
+------------------------------------------------ VSCode Install ----------------------------------------------------

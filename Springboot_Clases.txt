@@ -1,0 +1,546 @@
+------------------------------------------- Que es un Microservice? -------------------------------------------------
+
+Facilite la actualización e implementación de servicios de una manera escalable y flexible por pequeños servicios 
+independientes que se comunican a través de una API bien definidas.
+
+
+
+------------------------------------------- Que es un Web Service? --------------------------------------------------
+
+
+Es un sistema de software diseñado para ayudar a la interacción interoperable entre machine-machine a travez de la
+red las cuales son diseñadas para la interacción entre aplicaciones.
+
+Existen 3 fuentes claves para el desarrollo de un Web Service y eso son:
+
+	1.- Es diseñado para la comunicacion entre machine-machine
+	2.- Debe ser interoperable, que no dependa solamente de una plataforma
+	3.- Que se encuentre en constante comunicación en la red o en cloud
+
+
+Siempre que se desee tener comunicación con un web service debe de existir una comunicación entre nuestra aplicacion
+y un servicio web para eso se usan REQUEST por parte de nuestra APP y RESPONSES por parte del Web Services, en donde
+dentro de nuestras aplicaciones existen 2 tipos de configuraciones
+
+	1.- XML
+	2.- JSON (El más usado y populars)
+
+
+Para que el web service sepa como responder a una peticion todo se hace mediante el formato Service Definition, el 
+cual no es más que la estructura que nosotros realizaremos en nuestra app dentro de un Servicio que esperara el 
+formato de respuesta que nosotros estructuremos en nuestro Service
+
+
+
+
+
+--------------------------------------------- Que es SOAP Service ---------------------------------------------------
+
+Como su siglas lo dicen es un Simple Object Access Protocol el cual es una forma especifica de poder consturir
+servicios web utilizando el formato XML como formato de cambio de solicitudes, definiendo una estructura de
+solicitud y de respuesta especifica para el web service:
+
+	1.- Envolve
+	2.- Header
+	3.- Body
+
+
+--------------------------------------------- Que es un REST Service ------------------------------------------------
+
+Como sus siglas dicen es un REpresentational State Transfer o Estado Representacional el cual es utilizado para los
+protocolos HTTP utilizando metodos como GET,PUT,POST,DELETE en donde la estrucutra de solicitud y de respuesta por
+parte de este servicio esta definido por HTTP Hyper Test Transfer Protocol basados en la recuperacion de datos
+en formatos JSON
+
+
+
+
+--------------------------------------------- ISSUES (Problemas)
+
+
+If you are using Intellij or you are using Java 9+ or you are facing a ClassNotFoundException, we are here to help. 
+This 50-page troubleshooting guide and faq is our way of thanking you for choosing to learn from in28Minutes. It 
+provides solutions for 200 FAQ and Frequently faced Problems.
+
+Here's the Quick Start with Top 10 FAQ
+
+https://github.com/in28minutes/in28minutes-initiatives/blob/master/The-in28Minutes-TroubleshootingGuide-And-FAQ/quick-start.md
+
+
+
+
+
+----------------------------------------------- Procesos para un RESTful Web Service
+
+Users -> Post
+
+- Retrieve all users	- GET	/users
+- Create a user		- POST	/users
+- Retrieve one user     - GET   /users/{id} -> /users/1  
+- Delete a user		- DELETE /users/{id} -> /users/1
+
+
+- Retrieve all post for a user - GET	/users/{id}/post
+- Create a post for a user     - POST	/users/{id}/post
+- Retrieve details of a post   - GET 	/users/{id}/post/{post_id}
+
+
+
+
+	------------------------------ Creando un controlador GET
+
+Dentro de nuestra capa de Controllers nosotros al crear un GET o un Metodo dentro de nuestra aplicacion REST
+podemos hacerlo de 2 maneras ya sea con @Get/Post/Put/DeleteMapping o con @RequestMethod, ejemplo
+
+	@RestController
+	public class HelloWorldController {
+
+    	@RequestMapping(method = RequestMethod.GET,path = "/hello-world")
+    	public String helloWorld(){
+        	return "Hello World React!";
+    	}
+	}
+
+	ó
+
+	@RestController
+	public class HelloWorldController {
+
+    	@GetMapping("/hello-world") //<---- Esta es la mejor practica y así nos ahorramos código o tiempo
+    	public String helloWorld(){
+        	return "Hello World React!";
+    	}
+	}
+
+
+
+
+
+
+
+----------------------------------------- Que es un Servlet Dispatcher ----------------------------------------------
+
+El dispatch servlet es la herramienta framework que nos permite obtener las peticiones que un usuario hace hacia el
+cliente de nuestro servicio, es el encargado que cada vez que se haga una peticion con "/" este framework pueda
+comenzar a hacer una busqueda en nuestra clase controlador e identificar a que metodo se esta mandando a llamar
+
+
+
+
+------------------------------------------------ @PathVariable ------------------------------------------------------
+
+El PathVariable se utiliza para cada vez que nosotros queramos obtener una variable en la barra de nuetro browser
+incrustrada dentro de nuestra clase para hacer uso de ella, ejemplo:
+
+    @GetMapping(path = "/hello-world/path/{name}")
+    public HelloWorldBean helloWorldBean(@PathVariable String name){
+        return new HelloWorldBean(String.format("Hello World Bean, %s",name));
+    } 
+
+
+	(NOTA: Cuando queramos comparar un null con un int, la mejor opción es que en vez de declarar el objeto como
+		tipo int, declararlo con la sentencia completa, osea, "Integer" de esta manera podremos comparar con
+		un null)
+
+
+
+
+
+
+
+
+
+----------------------------------------------- Creando un DAO Service ----------------------------------------------
+
+package com.in28minutes.rest.webservice.restfulwebservice.user;
+
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Component
+public class UserDAOService {
+
+    //Inicializamos nuestra lista de objetos de tipo usuario
+    private static List<User> users = new ArrayList<>();
+    private static int userCount = 3;
+
+    // Asignamos de forma estatica unos usuarios de prueba
+    static {
+        users.add(new User(1,"Edwin","edanama@ibm.com",new Date()));
+        users.add(new User(2,"Prueba","prueba1@ibm.com",new Date()));
+        users.add(new User(3,"Andrea","andy@ibm.com",new Date()));
+    }
+
+    // Creamos un metodo para devolver una lista de usuarios
+    public List<User> findAll(){
+        return users;
+    }
+
+    // Creamos un metodo para agregar o alamacenar usuarios
+    public User save(User user){
+        if (user.getId() == null){
+            user.setId(++userCount);
+        }
+        users.add(user);
+        return user;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------- Creando un Controlador POST --------------------------------------------
+
+Normalmente los POST son utilizados para almacenar datos dentro de una base de datos o ya sea dentro de un archivo
+en este caso la implementación es sencilla, solamente en vez de poner GetMapping se hará con un PostMapping, con
+el unico detalle que aquí se usa la notación @RequestBody para indicar que se hará una peticion de insersion 
+completa de los datos del objeto ejemplo:
+
+    @PostMapping("/users")
+    public void putOneUser(@RequestBody User user){
+        User saveUser = userDAOService.save(user);
+    }
+
+
+	(NOTA: Para realizar una prueba POST en postman simplemente damos a POST en nuestra peticion, nos vamos a
+		body, despues a raw, despues seleccionamos el tipo de texto que en este caso es JSON 
+		y ahí escribimos el cuerpo completo de nuestro objeto en formato JSON)
+
+
+
+
+
+
+
+
+--------------------------------------------- Creando un DELETE en REST ---------------------------------------------
+
+1.-[Para eso necesitamos modificar nuestro DAOimplementation]
+
+public User deleteById(int id){
+        Iterator<User> iterator = users.iterator();
+        while(iterator.hasNext()){
+            User user = iterator.next();
+            if(user.getId()==id){
+                iterator.remove();
+                return user;
+            }
+        }
+        return null;
+    }
+
+
+2.-[Cambiamos nuestro controlador]
+
+
+    @DeleteMapping("/users/{id}")
+    public void deleteOneUser(@PathVariable int id){
+        User saveUser = userDAOService.deleteById(id);
+        if(saveUser==null){
+            throw new UserNotFoundException("Id - "+id);
+        }
+    }
+
+
+
+
+
+
+
+
+-------------------------------------------- Creando una clase para Exceptions --------------------------------------
+
+Para realizar una clase exclusivamente para excepciones lo que haremos es crear una nueva clase con una implementacion
+a RunTimeException y especificamos el tipo de Excepcion que nos puede arrojar el request
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class UserNotFoundException extends RuntimeException {
+    public UserNotFoundException(String s) {
+        super(s);
+    }
+}
+
+-------------
+try{
+	...
+}catch(){
+	throw new UserNotFoundException("id - "+id);
+}
+
+
+
+
+
+
+
+
+
+--------------------------------------- Agregando dependencias de Validacion ----------------------------------------
+
+Para agregar una dependencia de validación en SpringBoot tiene que hacerse de manera manual, por tal motivo nos 
+vamos a nuestro POM y una vez ahí agregamos la siguiente dependencia
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+Una vez agregada la dependencia tenemos que volver a actualizar nuestro proyecto por parte de Maven, para eso en 
+IntelliJ vamos a nuestro proyecto y damos clickD nos vamos a las siguientes opciones Maven/Reload Project y listo!
+Actualizamos las nuevas dependencias de Maven y listo para correr!:D
+
+
+
+
+
+
+
+-------------------------------------- Aplicando validaciones para REST Services ------------------------------------
+
+			Capitulo 30
+
+-------------------------------------- Internacionalizar un header con lenguajes ------------------------------------
+
+			Capitulo 32
+
+
+---------------------------------- Uso de Swagger para la administracion de Controladores ---------------------------
+
+Swagger es un framework que trabaja de la mano con Springboot que nos muestra de una forma grafica y más detallada
+cada uno de los controladores que nosotros creamos durante la fase de todo nuestro proyecto, es un framework de 
+código abierto y solo es necesario instalar las dependencias en nuestro archivo POM para generar un esquema grafico
+de cada uno de nuestros componentes, para eso hacemos los siguientes pasos.
+
+1.-[Generar la dependencia en nuestro archivo POM]
+
+Vamos a la pagina oficial de Swagger y ver la dependencia más actual, en este caso:
+
+   <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.5.10</version>
+   </dependency>
+	
+Copiamos la dependencia y la agregamos a nuestro POM
+
+
+2.-[Actualizamos nuestro proyecto y corremos]
+	
+Para actualizar el proyecto nos vamos a dar clickD sobre el proyecto, vamos a Mave/Reload Project y listo
+
+Ahora para ejecutar el URI vamos al siguiente enlace de nuestro navegador
+
+
+	http://localhost:8080/swagger-ui.html
+
+
+Esta herramienta nos ayudara para crear de manera rapida y más detallada nuestra API Documentation
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------- Springboot Actuator --------------------------------------------------
+
+		Capitulo 36
+
+
+------------------------------------------- Springboot Hall Explorer ------------------------------------------------
+
+Es un framework que nos ayuda a hacer testing de los estados de nuestros controladores sin la necesidad de usar 
+postman, es de forma local pero en lo personal me agrada mas Swagger xd 
+
+		Capitulo 37
+
+
+----------------------------------------- Filtrar datos de salida JSON ----------------------------------------------
+
+		Capitulo 38-39
+
+
+------------------------------------------- Control de Versiones ----------------------------------------------------
+
+Versiones distintas del mismo servicio
+
+		Capitulo 40-41
+
+
+------------------------------------------- Seguridad en Authentication ------------------------------------------------
+
+Para crear una seguridad al momento de la authentificacion necesitamos tener instaladas las dependencias de seguridad
+en nuestro proyecto, para eso nos vamos a nuestro POM y agregamos la siguiente dependencias:
+
+1.-[POM securiry dependencies]
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+2.-[Agregamos el usuario a nuestro archieve.properties]
+
+
+	security.user.username=[Cualquier_nombre]
+	security.user.password=[Cualquier_password]
+
+
+
+
+
+
+
+
+-------------------------------------------- Conexión de JPA al proyecto ---------------------------------------------
+
+Cuando hay que hacer una conexión a la BD tenemos que hacer una dependencia con H2 y para eso se necesita insertar 
+las siguientes lineas de código en nuestro application.properties
+
+
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.jpa.defer-datasource-initialization=true
+
+
+https://ibm-learning.udemy.com/course/microservices-with-spring-boot-and-spring-cloud/learn/lecture/27634382#content
+
+Para más información
+
+
+
+
+
+------------------------------------------ Bootstrap en Spring ------------------------------------------------------
+
+If you are using 2.4.0, you need to add this dependency to the pom.xml
+Agregamos la siguiente dependencia en nuestro archivo POM
+
+<dependency>
+   <groupId>org.springframework.cloud</groupId>
+   <artifactId>spring-cloud-starter-bootstrap</artifactId>
+</dependency>
+
+
+
+
+----------------------------------------------- Troubleshooting con Eureka Server -----------------------------------
+
+https://github.com/in28minutes/in28minutes-initiatives/tree/master/The-in28Minutes-TroubleshootingGuide-And-FAQ#debugging-problems-with-naming-server-eureka-and-ribbon
+
+
+
+
+----------------------------------------------- Troubleshooting con Zuul Server -----------------------------------
+
+
+https://github.com/in28minutes/in28minutes-initiatives/tree/master/The-in28Minutes-TroubleshootingGuide-And-FAQ#debugging-problems-with-zuul-api-gateway
+
+
+
+----------------------------------------------- Zipking Server -----------------------------------------------------
+
+ONLY FOR WINDOWS USERS
+If you are on Windows, this is important for you:
+
+After you watch the next video, You can use the below commands to run Zipkin Server.
+
+set RABBIT_URI=amqp://localhost
+java -jar zipkin-server-2.7.0-exec.jar
+
+
+
+
+
+
+
+
+----------------------------------------------- Recursos de SpringCloud ---------------------------------------------
+
+https://github.com/in28minutes/course-material/blob/main/01-spring-microservices/v2/downloads.md
+
+
+Cuando creemos una nueva instancia con SpringCloud hay que incluir en la primera linea la base:
+
+	spring.config.import=optional:configserver:http://localhost:8888
+
+
+Estandarización de puertos para Spring Cloud
+
+	1.- Limits Microservices	------->	8080,8081,8082,...
+	2.- Spring CLoud Config Serv	------->	8888
+	3.- Currency Exchanges Microser	------->	8000,8001,8002,...
+	4.- Currency Conversion Microse	------->	8100,8101,8102,...
+	5.- Netflix Eureka		------->	8761
+	6.- API Gateway			------->	8765
+	7.- Zipkin Distributed Tracing Serv --->	9411
+
+Conexion de un Microservicio con el Spring Cloud Server y almacenamiento a Git (127)
+
+Creando ejemplo usando microservicios (132)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
