@@ -217,6 +217,348 @@ clase puedes tener tantos objetos con el mimso nombre como sea necesario, un eje
 	<p class="parrafo1">Este es un parrafo</p>
 
 
+------------- Div
+
+Los elementos div nos ayudan para poder encapsular atributos u otro objetos dentro de él para poder manejarlos mejor
+al momento que queramos darle estilo con un CSS y asignarle su respectivo ID
+
+	<div>
+		<p id="parrafo1">Este es un parrafo</p>
+		<p id="parrafo2">Este es un parrafo</p>
+		<p class="parrafo1">Este es un parrafo</p>
+		<p class="parrafo1">Este es un parrafo</p>
+	</div>
+
+
+-------------- header y footer
+
+Asignamos lo que viene siendo el encabezado y la parte baja de nuestor HTML
+
+	<header>...</header>
+
+	<footer>...</footer>
+
+
+
+-------------- Nav
+
+La etiqueta nav nos ayuda al momento en que nosotros vamos a codificar en una barra de navegación en formato HTML
+lo cual nos hace que nuestro texto o dcumento se vea más presentable
+
+	<nav>...</nav>
+
+
+-------------- article
+
+Nos ayuda para cuando nosotros queremos agregar mucho texto como ya lo sea un articulo y poder escribir todo lo que
+queramos dentro del él y el cual puede ser dividido en secciónes con section
+
+	<article>
+		<section>
+			....
+		</section>
+		<section>
+			....
+		</section>
+	</article>
+
+
+------------ Aside
+
+El Aside nos ayuda al momento que nosotros queremos tener un cierto texto unido o encapsulado a un especifico dato
+y que se relacione con el, podemos usar el aside como en el siguiente ejeplo:
+
+	<aside>
+		...
+	</aside>
+
+
+
+-------------- Time o Fecha
+
+Si nosotros queremos agregar una fecha especifica a nuestor documento utilizamos la etiqueta time, como en el
+siguiente ejemplo
+
+	<p>....<time datetime="2013-">August 30th, 2013</time>....</p>
+	<p>....<time datetime="2013-08-30">August 30th</time>....</p>
+	<p>....<time datetime="2013-08-30 13:41">August 30th</time>....</p>
+
+
+
+	(NOTA: Para practica todo esto es el capitulo 33 del curso de HTML)
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------ CSS ----------------------------------------------------------
+
+
+---------- Propiedades
+
+		-font-size: 20px;
+		-font-family: Helvetica;
+		-color: Blue;
+		-width: 24px/24%/24em;
+		-padding: 8em;
+		-background: #333;
+		-border: solid 4px #eee;
+		-margin: 5% 10% 5% 10%;
+		-text-align: center;
+
+
+El CSS nos ayuda para poder darle estilo a nuestra pagina WEB, como forma estetica a cada uno de los elementos que
+se encuentran en nuestro documento HTML, para poder crear un archivo CSS para darle estilo solamente a nuestro
+documento vamos a ponerle la extensión css como el ejemplo:
+
+			style.css
+
+
+Para poder hacer referencia al documento que vamos a diseñar los estilos lo haremos con la notación link en
+donde normlamente se coloca en el HEAD del HTML, ejemplo:
+
+	<link href="styles.css" rel="stylesheet">	<------ Asignamos la dirección de donde se encuentra el archivo CSS
+
+
+
+------------ Referencias a Etiquetas
+
+Si se van a hacer referencias a etiquetas generales como header o body solamente hacemos el llamado siguiente
+
+	body{
+	   font-family: Helvetica:
+	   background-color: #eeefff;
+	   ...
+	}
+	h1{
+	   font-family: Helvetica:
+	   background-color: #eeefff;
+	   ...
+	}
+	p{
+	   font-family: Helvetica:
+	   background-color: #eeefff;
+	   ...
+	}
+
+
+
+
+Para hacer referencias a datos que tengan ID se hace de la siguiente manera con un '#', como en el 
+siguiente ejemplo:
+
+	#monkey{
+		.....
+	}
+	#mama{
+		.....
+	}
+
+
+Para hacer referencias a datos que tengan una CLASS se hace de la siguiente manera con un '.', como en el 
+siguiente ejemplo:
+
+	.block1{
+		.....
+	}
+	.block2{
+		.....
+	}
+
+
+Para hacer referencia a elementos o etiquetas que se encuentran dentro de otras se debe de hacer en forma de arbol
+para lograr llegar al elemento que deseamos, ejemplo:
+
+
+	.block1 p{
+		.....
+	}
+	.block2 p em{
+		.....
+	}
+	.block2 p em h3{
+		.....
+	}
+
+
+En caso de que queramos agrupar varios elementos dentro de un div con caracteristicas similares, podemos hacerlo de 
+la siguiente manera 
+
+	.block1 p, block1 p{
+		.....
+	}
+	.block2 h3, block2 h2, block1 h3{
+		.....
+	}
+
+
+
+	(NOTA: Entrenar este tipo de notaciones es en el capitulo 46)
+
+
+
+
+
+
+
+
+-------------- Box Models para CSS (Osea bordes, marcos, contorno, etc..)
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
