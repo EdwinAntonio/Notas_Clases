@@ -129,14 +129,17 @@ public class BDDLogin{
 
 3.-[Correr nuestra prueba en un nuevo packete en una nueva clase]
 
+Para poderlo correr necesitamos tener instalado mediante Maven las librerias de JUnit, de preferencia la de JUnit 4.12
+para que al momento de ejecutarlo sea mas estable y si gustas despues cambiar a JUnit 5 pero de momento JUNit 4.12
 
-@RunWith(Cucumber.class) //<------ El tipo de prueba que usaremos
+
+@RunWith(Cucumber.class) //<------ El tipo de prueba que usaremos (POR CIERTO, SOLO FUNCIONA EL RunWith con JUnit 4)
 @CucumberOptions(features="features",glue="stepImplementations") // Primer parametro indica el nombre de nuestra
 								 // carpeta de escenarios cucumber y el segundo indica
 								 // el packete en donde se encuentra la clase que une
 								 // cucumber con nuestro proyecto java
 public class LoginTestRunner{
-
+	// Si así deja esta parte de Testing en blanco
 }
 
 
@@ -146,12 +149,188 @@ Listongo
 
 
 
+	NOTA: Si nos sale el error "gherkin/formatter/Formatter" esto es por que la versión de Gherkins que estamos
+		utilizando es mayor a la version 2.12.1 para eso agrega la siguiente dependencia a tu proyecto
+
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>gherkin</artifactId>
+			<version>2.12.2</version>
+		</dependency>
+
+
+	NOTA: Cuando salga el error Exception in thread "main" java.lang.NoSuchMethodError: org.junit.runner.Description.createSuiteDescription(Ljava/lang/String;Ljava/io/Serializable;[Ljava/lang/annotation/Annotation;)Lorg/junit/runner/Description;
+		debes de cambiar la version de JUnit 4 a una mayor a 4.10, uno de los mejores ejemplos es 4.12 la 
+		mejor opcion JUnit4.12 <---- No lo olvides JUnit 4.12
+
+	
+
+		<dependency>
+            		<groupId>junit</groupId>
+            		<artifactId>junit</artifactId>
+            		<version>4.12</version>
+            		<scope>test</scope>
+        	</dependency>
+        	<dependency>
+            		<groupId>junit</groupId>
+            		<artifactId>junit</artifactId>
+            		<version>4.12</version>
+            		<scope>compile</scope>
+        	</dependency>
 
 
 
 
+4.-[Configurar nuestra prueba para acceder a una WEB]
+
+En nuestro documento de Test (No en el TestRunner, sino donde estan las sesiones de Test como Given, Where, Then)
+vamos a configurar cada uno para que pueda acceder a una plataforma WEB con WebDriver
+
+	Los terminos más usados en Cucumber son
+
+		*Given
+		*When
+		*And
+		*But
+		*Then
+
+	import org.openqa.selenium.WebDriver;
+
+	public class YTTesting {
+		WebDriver driver;
+
+    		//Given The user type the name song on the search bar
+    		@Given("^the user type the name song on the search bar$")
+    		public void user_is_on_youtube_page(){
+        		System.out.println("Prueba de usuario en Youtube");
+        		
+			//Paso 1.- Abrir el Driver
+			//La propiedad de setProperty la saque de este link https://www.selenium.dev/documentation/getting_started/installing_browser_drivers/#edge
+        		System.setProperty("webdriver.edge.driver", "C:\\Users\\103413781\\Documents\\IBM\\Clases\\Selenium\\msedgedriver.exe"); //Especificamos primero el Driver y despues su localización
+        		driver = new EdgeDriver();
+
+        		//Paso 2.- Colocarlo en la pagina que deseamos
+        		driver.get("https://www.youtube.com/");
+    		}
+		...
+	}
 
 
+	--------------------------------------------------------------------
+
+	NOTA: Cree este metodo para que el acceso a una pagina WEB desde Cucumber sea más fácil al navegador EDGE
+
+	public void getInEdge(String page){
+        	System.setProperty("webdriver.edge.driver", "C:\\Users\\103413781\\Documents\\IBM\\Clases\\Selenium\\msedgedriver.exe");
+        	driver = new EdgeDriver();
+        	driver.get(page);
+    	}
+		
+
+	NOTA: En caso de que te salga el error java.lang.NullPointerException, esto se debe a que estas instanciando
+		la variable dentro de un metodo y no de forma global, para saber más sobre eso te recomiendo ver el
+		siguiente link para solucionar ese problema
+
+		https://stackoverflow.com/questions/51784274/how-to-resolve-java-lang-nullpointerexception-in-selenium-with-cucumber
+
+
+	NOTA: Para buscar botones te recomiendo usar el By.id ya que en la mayoria de paginas se guia por ID y ya que
+		en HTML y CSS solamente debe de existir 1 unico ID por cada elemento, así que sería más facil de 
+		buscar en caso de que no tenga nombre ese elemento
+
+
+		driver.findElement(By.id("search-icon-legacy")).click();
+
+	--------------------------------------------------------------------
+
+    @When("^press enter to search for a video of the song and retrieve a video$")//When Press enter to search for a video of the song and retrieve a video
+    public void press_enter_to_search_for_a_video_of_the_song_and_retrieve_a_video(){
+        System.out.println("Prueba de usuario en Youtube");
+        //search-icon-legacy
+        driver.findElement(By.id("search-icon-legacy")).click();
+        
+        //driver.findElement(By.id("search-icon-legacy")).click();
+    }
+
+
+    @Then("^select one of those videos and enjoy the music$")//Then Select one of those videos and enjoy the music
+    public void select_one_of_those_videos_and_enjoy_the_music(){
+        System.out.println("Prueba de usuario en Youtube");
+        driver.findElement(By.id("video-title")).click();
+    }
+
+
+
+
+----------- Parametrizar variables en archivo Feature
+
+Podemos parametrizar variables en nuestro archivo Feature simplemente asignando a la palabra que hayamos escrito en
+el atributo Given, When, Then, etc... con las flechas, despues usamos la palabra recervada 'Examples' para 
+poder asignarle varlor a esa variable que vamos a estar utilizando separado por '|', ejemplo:
+
+	Scenario: hacer las siguientes acciones 
+		Given: Mandar a la <lugar> varias veces a alguien
+ 		...
+
+	Examples:
+	| lugar | <---- Antes de asignar los demas valores siempre debemos de colocar el nombre de la variable primero
+	| verga |
+	| casa 	|
+	| calle |
+	| avenida |
+	  .....
+
+
+
+
+Ahora cuando vayamos a utilizar una de estas variables dentro de nuestro archivo Testing en donde se encuentran los
+Given, When, Then, etc.. en vez de usar la palabra encerrada en flechas, lo que haremos sera poner una expresion
+regular en su lugar, ejemplo
+
+
+		
+    //@When("^mandar a la <lugar> varias veces a alguien$") <---- Así no
+    @When("^mandar a la (.*) varias veces a alguien$") <---- Así si, como Expresion Regular
+    public void mandar_a_la_cosa_a_alguien(){
+		.....
+    }
+
+
+
+Ahora cuando vayas a usar la variable dentro del driver, ahí vas a usar el nombre de la variable que asignaste desde
+tu archivo Feature, el nombre tal cual lo pusiste y ponerlo como parametro en la nueva función, ejemplo:
+
+   public void mandar_a_la_cosa_a_alguien(String lugar){  <----- Nombre igual que el del archivo feature
+	...        
+	driver.findElement(By.id("search-icon-legacy")).sendKeys(lugar); <---- Nombre del parametro de la funcion
+        ...
+    }
+
+
+
+
+	NOTA: Los atributos que van dentro del '@When(^...$)' nunca deben de llamarse igual o si no generara 
+		conflicto cuando cucumber este realizando las pruebas, por eso es recomendable que sea diferente el 
+		texto en nuestro archivo Testing. Peeeeeeeerooo..... Si se pueden usar varias veces el mismo concepto
+		en el archivo Feature MIENTRAS realicen el mismo trabajo, si van a hacer cosas distintas entonces
+		si se debe de llamar diferente en el archivo Feature, si no, entonces podemos reutilizar codigo en
+		el archivo Testing, para no estar creando WHEN, etc.. cuando se llamen igual en el arhcivo Feature
+
+
+	NOTA: Para terminar cerrando la ejecución y que no se este abriendo a cada momento un nuevo navegador y se
+		esten acumulando ahí, usamos el siguiente metodo con la notación @After
+
+		
+		import cucumber.api.java.After;		
+
+		@After
+    		public void downBrowser(){
+        		driver.quit();
+    		}
+
+
+
+-------------------- @Steps Cucumber
 
 
 
