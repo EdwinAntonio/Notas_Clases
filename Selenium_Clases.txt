@@ -1,7 +1,7 @@
 
 ------------------------------------------ ¿Que es Selenium? ------------------------------------------------
 
-Selenium es un IDE que ayuda a la ejecucion automatica para entornos WEB, en donde nosotros despues de 
+Selenium es un Framework que ayuda a la ejecucion automatica para entornos WEB, en donde nosotros despues de 
 desarrollar un proyecto de Spring o Springboot nos ayudara a hacer pruebas durante la ejecución del proyecto
 en forma de "Usuario" y haciendo que cada prueba pueda ser una validación para el proyecto
 
@@ -328,17 +328,37 @@ tu archivo Feature, el nombre tal cual lo pusiste y ponerlo como parametro en la
         		driver.quit();
     		}
 
+	        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+	        driver.manage().timeouts().pageLoadTimeout(30,TimeUnit.SECONDS);
+
+-------------------- Background
+
+Son como reglas que siempre deben de realizarse antes de que se realice una prueba de testing con Cucumber
 
 
--------------------- @Steps Cucumber
+-------------------- @tag [text.feature]
+
+Sirve para que cuando nosotros coloquemos la notacion @tag, todo lo que se encuentre debajo de él es lo unico que se 
+va a ejecutar al momento de hacer un testin
 
 
+-------------------- AND & BUT
+
+Cuando utilizamos estas palabras claves dentro del documento Feature tomara la declaración de la palabra clave de la
+parte de arriba donde se esta utilizando, ejemplo:
 
 
+	Given I work with my mom		=	Given I work with my mom
+	Given Earning <MONEY> every week		And Earning <MONEY> every week
 
+	
 
+-------------------- XPATH
 
+En caso de no encontrar un ID o un Name o una ClassName, podemos usar el Full XPATH para localizar un elemento
+dentro de nuestra WEB y es más facil de localizar un elemento que no tena ID, Name, etc... 
 
+	Click Derecho, en donde inspecionamos nuestro elemento y seleccionamos COPY/Copy	
 
 
 

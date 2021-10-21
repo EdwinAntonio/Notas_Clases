@@ -1,12 +1,42 @@
+
+
+Scripts de Jenkins utiles:
+
+	https://github.com/macloujulian/cursojenkins
+
+----------------------------------------------- JENKINS -------------------------------------------------------------
+
+
+
 Jenkins es open source y probablemente el software de automatización más usado de todos, escrito en Java y 
 corre en JVM. Es muy conveniente al ser una herramienta extensible al tener un ecosistema de plugins que te 
 permiten extenderlo, puedes escribir tus propios plugins con Java, pero ya la comunidad ha desarrollado un 
 sinfín de ellos.
 
+Es una aplicación basada en servidor y requiere un servidor web como Apache Tomcat y el poder hacer un seguimiento
+de tareas repetidas que surgen durante el desarrollo de un proyecto o producto
+
+
+----------------- List y Set - Diferencias
+
+La diferencia es que Set se almacena de manera desordenada y no permite valores duplicados. List se utiliza para 
+almacenar elementos de forma ordenada y permite valores duplicados. No se puede acceder a Set elementos por una 
+posición de índice, y List elementos se puede acceder con una posición de índice.
+
+----------------- Jenkins como CI/CD
+
+Es una herramienta CI/CD que significa integración continua y entrega continua, para eso nos ayudara como herramienta
+de automatización para construir (BUILD) y entregar (Deliver) software, entonces con ayuda de Jenkins podremos
+construir y desplegar el producto en entornos de producción.
+
+
 También nos permite escalar de manera horizontal y verticalmente, puede correr un sin número de trabajos 
 concurrentemente en una sola máquina y si esa máquina no da abasto se le puede dar más recursos a Jenkins. 
 O una máquina no es suficiente entonces Jenkins nos permite escalar horizontalmente con ““slaves”” y 
 controlar varios nodos para que trabajen por él.
+
+
+------------------ Jenkins Seguridad 
 
 Jenkins siempre esta siendo innovado y teniendo actualizaciones de seguridad, esto es importante porque es 
 el target más grande de seguridad de una empresa porque lo tiene todo.
@@ -15,3 +45,249 @@ Algo que Jenkins ha trabajado mucho en los últimos años es que puedes escribir
 trabajo en código. Nosotros queremos que nuestra automatización también sea programática, no solo los comando 
 a ejecutar sino poder migrar nuestro trabajo a un nuevo Jenkins de manera reproducible. 
 Han creado Pipelines as code
+
+
+
+------------------- Que es un pipeline
+
+Un pipeline es un conjunto de instrucciones del proceso que siga una aplicación desde el repositorio de control 
+de versiones hasta que llega a los usuarios.
+
+
+
+------------------ Que es un Jenkinsfile
+
+El fichero Jenkinsfile es un script o archivo en forma de codigo basado en Groovy que permite definir un pipeline 
+o flujo completo del proceso de Jenkins. Puedeser manejado por un controlador de versiones (GIT) y Se recomienda 
+que la primera línea del script sea #! groovy para que los editores puedan interpretar que es un script de Groovy 
+y lo muestren correctamente.
+
+En estos 'Stages' nosotros realizamos la estructura de pruebas que queremos para nuestro proyecto basandonos en los
+estados del proyecto como son la parte del Build, Testing y Deploy para esa parte del proyecto
+
+
+
+------------------- Compilación de un JOB
+
+Cada vez que nosotros realizamos la compilación de un Job con la sección de Build, lo que hace es que siempre va a
+descargar el repositorio COMPLETO ya que pueden haber actualizaciones dentro del repositorio en GitHub y es 
+recomendable tener el proyecto lo más actualizado posible, así que hay que tener en cuenta esto
+
+
+
+------------------- Diferencias entre un Jenkinsfile y un Jenkins Job DSL
+
+Aunque ambos nos ayudan a realizar los pasos CI/CD en forma de código lo que los hace diferentes uno de otros es que
+se implementan de manera distinta, mientras DSL crea Jobs basados en el código proporcionado dandole distintos 
+trabajos a un JOB padre, mientras que con Jenkinsfile puedes encargar el ciclo completo del proyecto desde su
+estructura Build, Test y Deploy el cual hace un 
+
+
+------------------- Formas de crear un Pipeline
+
+Se puede crear de 2 maneras un Jenkins pipeline, se pude usar mediante Groovy que se realiza dentro de una maquina 
+virtual y utiliza lenguaje JAVA o se puede hacer mediante DSL (UI) el cual su forma de estructurar el código al 
+final va a ser interpretada por GROOVY ya que tiene mucha flecibilidad este lenguaje
+
+	Etapas del Pipeline
+
+	1.- BUILD: 	En esta estapa se realiza la compilación del código del proyecto
+	2.- TEST:  	Realiza las pruebas unitarias de los metodos implementados en el proyecto
+	3.- Deploy:	Despliega la aplicación, y se realizan testings como fue el desarrollo o paso final para el 
+			Deploy y testear la calidad del proyecto
+
+
+
+--------------------- Estructura de un Jenkinsfile (Declarative Pipeline)
+
+	pipeline{
+		agent any
+		stages{
+			stage('Build'){
+				steps{
+				}
+			}
+			stage('Test'){
+				steps{
+				}
+			}
+			stage('Deploy'){
+				steps{
+				}
+			}
+		}
+	}
+
+
+	*Agent: 	Se encarga de indicarle a Jenkins que asigne un ejecutor a las compilaciones
+			y un espacio de trabajo para e pipeline
+	*Pipeline:	Es el bloque que define el contendio o el proceso entero de las etapas de un Jenkinsfile
+	*Node:		Es una maquina que ejecuta el flujo de trabajo completo del pipeline	
+	*Any:		Referido a ejecutar el pipeline o la etapa determinada en cualquier agent disponible
+	*Stages:	Contiene todo el trabajo necesario para el proyecto, puede constar de diferentes etapas, 
+			donde en cada una se llevara a cabo una tarea o tareas especificas
+	*Steps:		Dentro de una etapa, tenemos definidos los pasos para llevar a cabo la tarea del bloque
+			puede ser 1 o más pasos y se especifican en orden para su ejecución
+	*Paralel:	Indica al pipeline que las etapas seran ejecutadas en paralelo a otras tareas
+
+
+
+----------------------- Etapas de un Jenkinsfile
+
+Existen 2 tipos de etapas, las Paralelas y las Secuenciales en donde nosotros podemos tener secciones de stages en
+la cual nosotros podemos describir el funcionamiento dle proyecto
+
+	NOTA: Hay que tener en cuenta que un 'STAGE' puede tener solamente UN STEP, UN STAGES, UN PARALEL y UN MATRIX
+		
+	NOTA: Cuando no especificamos el agent con ANY en nuestro pipeline, tendremos que hacerlo de forma manual en
+	      cada uno de los 'STAGE' 
+
+pipeline {
+    agent any
+    stages {
+        stage('Non-Parallel Stage') {
+            steps {
+                echo 'This stage will be executed first.'
+            }
+        }
+        stage('Parallel Stage') {
+            when {
+                branch 'master'
+            }
+            failFast true
+            parallel {
+                stage('Branch A') {
+                    agent {
+                        label "for-branch-a"
+                    }
+                    steps {
+                        echo "On Branch A"
+                    }
+                }
+                stage('Branch B') {
+                    agent {
+                        label "for-branch-b"
+                    }
+                    steps {
+                        echo "On Branch B"
+                    }
+                }
+                stage('Branch C') {
+                    agent {
+                        label "for-branch-c"
+                    }
+                    stages {
+                        stage('Nested 1') {
+                            steps {
+                                echo "In stage Nested 1 within Branch C"
+                            }
+                        }
+                        stage('Nested 2') {
+                            steps {
+                                echo "In stage Nested 2 within Branch C"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+	NOTA: Para hacer que todo el pipeline se detenga en alguna sesión que nosotros pensamos que puede haber error
+		lo hacemos con la notacion 'failFast true' en la sesión donde queremos que se detenga, como en el 
+		ejemplo de la parte de arriba
+
+	
+---------------------- Triggers en un Pipeline
+
+Para poder ver la frecuencia con la que se va a estar realizando un test con triggers en Jenkins, ve a la siguiente
+pagina:
+
+	https://www.jenkins.io/doc/book/pipeline/syntax/
+
+
+
+----------------------- Options: Timeout y Retry
+
+Un Timeout y un Retry nos indicaran las veces que nosotros queremos que un stage se repita y sobre por cuanto tiempo
+va a estarse ejecutando esa estapa o segmento de codigo (stage), como se muestra en el siguiente ejemplo:
+
+	https://www.jenkins.io/doc/pipeline/tour/running-multiple-steps/#timeouts-retries-and-more
+
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+            steps {
+                retry(3) {
+                    sh './flakey-deploy.sh' 
+                }
+
+                timeout(time: 3, unit: 'MINUTES') {
+                    sh './health-check.sh'
+                }
+            }
+        }
+    }
+}
+
+	*EL retry(3) nos indica que si el archivo falla su ejecución, entonces repetira 3 veces la acción
+	*El timeout nos indica que si el archivo tarda más de 3 minutos en ejecutarse la tarea entonces terminará 
+		ahí el pipeline y sera marcado como Abortado (Bolita colro GRIS) al final en la consola
+
+
+
+----------------- Options
+
+La palabra reservada options nos ayuda para ejecutar una seríe de reglas o pasos para que los trabajos que se 
+encuentren ejecutandose deban de respetar o estar bajo el criterio de esas opciones asignadas, ejemplo:
+
+pipeline {
+    agent any
+    stages {
+        stage('Deploy') {
+	    options {
+		    timeout(time: 3, unit: 'MINUTES')
+	    }
+            steps {
+                retry(3) {
+                    sh './flakey-deploy.sh' 
+                }
+
+                retry(3) {
+                    sh 'sleep 50'
+                }
+            }
+	    ...
+        }
+    }
+}
+	
+	En este ejemplo nos dice que todos aquellos steps que se encuentren adelante del options deberan de seguir
+	las reglas que se establecen, en este caso todos los steps deben de durar menos de 3 minutos o si no se
+	parará la ejecución del Pipeline y si hubiera mas steps despues estos NO se ejecutaran
+
+
+
+
+Se recomienda trabajar Jenkins con Linux o se puede desde Windows?
+utilizacion de Jenkins de forma normal en Linux o realizrlo con Docker?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
