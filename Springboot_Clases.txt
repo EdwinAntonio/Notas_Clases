@@ -54,6 +54,20 @@ en formatos JSON
 
 
 
+---------------------------------- @Autowired
+
+Se encarga de hacer una injección de dependias de un objeto a otro, es el enlace que se encarga de insertar dentro
+de una clase las dependencias o caracteristicas que tiene un objeto desde otra clase
+
+
+
+
+---------------------------------- Tipos de Injección de Dependencias
+
+Existen 2 tipos de injección de dependencias, mediante los setter's and getter's o mendiante la realización de un
+contructor que haga conexión a esos atributos del objeto que se estara manejando
+
+
 
 --------------------------------------------- ISSUES (Problemas)
 

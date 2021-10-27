@@ -25,6 +25,31 @@ lo siguiente una vez instalado el JDK
 	6.- Damos OK, OK, OK y listongo! :D
 
 
+---------------------------------------- Modulos de Spring --------------------------------------------------
+
+Los modulos de spring son aquellas dependencias que nos ayudan a realizar los distintos procesos que usaremos
+para el desarrollo de nuestra aplicación, como ejemplo:
+
+	Acces Data:
+		1.- JDBC
+		2.- JMS
+		3.- Transaction
+		4.- ORM
+
+
+	WEB:
+		1.- MVC
+		2.- Portlet
+		3.- WebSocket
+		4.- Servlet
+
+	Core container:
+		1.- Core
+		2.- Beans
+		3.- Context
+		4.- SpEL
+
+
 --------------------------------------------- Spring Bean ---------------------------------------------------
 
 Cuando se nos este hablando de un Spring Bean solo pensemos que un simple objeto de java con sus respectivas

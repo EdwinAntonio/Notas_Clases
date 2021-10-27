@@ -7,7 +7,6 @@ Scripts de Jenkins utiles:
 ----------------------------------------------- JENKINS -------------------------------------------------------------
 
 
-
 Jenkins es open source y probablemente el software de automatización más usado de todos, escrito en Java y 
 corre en JVM. Es muy conveniente al ser una herramienta extensible al tener un ecosistema de plugins que te 
 permiten extenderlo, puedes escribir tus propios plugins con Java, pero ya la comunidad ha desarrollado un 
@@ -16,6 +15,113 @@ sinfín de ellos.
 Es una aplicación basada en servidor y requiere un servidor web como Apache Tomcat y el poder hacer un seguimiento
 de tareas repetidas que surgen durante el desarrollo de un proyecto o producto
 
+
+----------------------------------- Instalacion de una Maquina Virtual Ubuntu ---------------------------------------
+
+Username: osboxes
+Password: osboxes.org
+
+	1.- Tenemos que descargar Virtual Box en el enlace https://www.virtualbox.org/ y damos click en Downloads
+	    del lado izquierdo, seleccionamos nuestro sistema operativo y solo damos next next en la instalacion
+	2.- Descargamos la version LTS de Ubuntu desde la pagina oficial de Ubuntu
+	    (Si queremos descargarla con una version de Virtual Disk vamos a https://www.osboxes.org/ubuntu/
+	     y descargamos la version que queremos, para cambiar de usuario y contraseña ver a la seccion de
+	     'cambio de usuario y contraseña' de este documento)	
+
+	3.- Abrimos la maquina virtual y nos vamos a New/[Escribimos Ubuntu]/Damos next y seleccionamos en el disco
+	    duro de donde arrancaremos nuestro ISO
+	4.- Como recomendación antes de ejecutar Ubuntu por primera vez, hagamos un Snapshoot para volver al estado
+	    actual en caso de que nos salga un error al ejecutar, dando click en los 3 botones al lado del nombre de
+	    nuestra maquina virtual, seleccionamos Snapshoot, damos click en Take, damos algun nombre y listo
+	5.- Encendemos la maquina virtual ahora si y al ser la primera vez hay que realizar los siguientes comandos
+	    para actualizar el sistema operativo
+
+		1.- sudo apt-get update
+		2.- sudo apt-get install vim
+		3.- sudo apt-get install net-tools  --- Hay veces en la que no se activa la herramienta de red y 
+							asi se descarga
+
+	
+
+-------------------------- Conexion mediante SSH a nuestra maquina virtual
+
+Para hacer una conexion desde nuestra laptop/computadora a nuestra maquina virtual hay que asegurarse que el adaptador
+de red de nuestro espacio de maquinas virtuales se encuentre configurado en modo puente (Breadge Adapter), de la 
+siguiente manera:
+
+	1.- En nuestra maquina virtual vamos a configuracion
+	2.- Nos vamos a la seccion de Red y cambiamos el adaptador de red a estado 'Breadge Adapater' y Aceptar
+	    (Si la maquina virtual esta encendida, debemos de apagarla y volverla a encender)
+	3.- Una vez que corremos de nuevo la maquina virtual nos vamos a la terminal y agregamos el comando
+	    	sudo apt-get install openssh-server
+	4.- Una vez instalada la herramienta verificamos si todo se instalo correctamente con: 
+		sudo systemctl status ssh
+	5.- El estado del servicio tiene que estar en verde y corriendo (active running)
+	6.- Descargamos el programa PuTTY para las conexiones con SSH como en Redes: https://putty.org/
+	7.- Nos conectamos mendiante SSH con la ip de nuestra maquina virtual y listo
+
+
+	(NOTA: Si nos sale el error Network Erro: Connection Denegd hay que deshabilitar el Firewall) 
+
+--------------------------- Cambiar usuario y contraseña
+
+Para cambiar el usuario y la contraseña en caso de que hayas hecho el metodo de un disco duro virtual, lo siguiente:
+
+	1.- Vas a la terminal y escribes Users
+	2.- En la seleccion de user cambias y el nombre y despues te da lo opcion de la contraseña
+	3.- Una vez que cambias todo vuelve a iniciar la maquinta virtual y listo
+
+
+	----------- Root
+
+	1.- Para cambiar contraseña en el modo root tecleamos el comando sudo -i y nos pedira la contraseña actual
+	2.- una vez en root tecleamos el comando passwd y nos pedira ingresar una nueva contraseña 2 veces
+	3.- El sistema confirmara el cambio de contraseña y solo tecleamos el comando exit
+	4.- Listongo
+
+
+	----------- Cambiar nombre del equipo y usuario de Ubuntu
+
+		ubuntu@ubuntu 
+
+	Para esto hay que modificar 2 ficheros dentro de la carpeta raiz y para eso hacemos lo siguiente
+	1.- Entramos a la carpeta etc con el comando cd /etc y encontramos las carpetas host con el comando
+		 ls -l host*
+	2.- Localizamos el archivo 'hostname' y 'host', entramos a cada uno de ellos y los modificamos con el comand
+		 sudo nano hostname
+		 sudo nano host
+		(NOTA: El nombre del equipo tiene que ser el mismo en ambos archivos)
+
+	3.- Estando en los archivos cambiamos el nombre y tecleamos Ctrl-X para salir y al final damos que si
+	    queremos guardar los cambios
+	4.- para verificar que los cambios se hicieron correctamente usamos el comando sudo hostname "[Nombre]"
+	    si todo salio bien debe de aparecernos nuestro nuevo nombre
+	5.- Reiniciamos y listo!
+
+--------------------------- Cambiar keyboard de Ubuntu
+
+Para cambiar el usuario y la contraseña en caso de que hayas hecho el metodo de un disco duro virtual, lo siguiente:
+
+	1.- Vas al desgloce de aplicaciones y nos vamos a Settings 
+	2.- En el menu de opciones del lado izquierdo seleccionamos 'Region and Languages'
+	3.- Una vez ahi seleccionamos la opcion de 'input sources' y buscamos la que diga 'spanish (Win keys)'
+	4.- La seleccionamos y borramos la que teniamos por default
+	5.- LISTONGO!
+
+
+
+------------------------------- Problema con la re-escalabilidad de la maquina virtual
+
+Hay veces en las que el escalado de la maquina virtual se encuentra bloqueado o se ve muy feo, para eso vamos a 
+hacer lo siguiente:
+
+	1.- actualizamos ubuntu con el comando: sudo apt update
+	2.- En nuestra maquina virtual vamos a irnos a Devices y seleccionamos la opcion que dice 
+	    'insert guest addition CD Image'
+	3.- REINICIAMOS nuestra maquina virtual
+	4.- Listongo!
+
+	(En caso de tener una maquina virtual WINDOWS, seguir el siguiente video https://www.youtube.com/watch?v=YRK8jtP3B60)
 
 ----------------- List y Set - Diferencias
 

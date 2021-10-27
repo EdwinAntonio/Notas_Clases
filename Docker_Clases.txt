@@ -1,0 +1,28 @@
+------------------------------- Instalacion de Docker
+https://docs.docker.com/engine/install/ubuntu/
+
+	1.- Vamos a nuestra terminal y tecleamos el comando: sudo apt-get update
+	2.- Despues agregamos la siguiente lineas de comando sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+	3.- Una vez terminada de instalar agregamos la clave GSP para nuestro docker
+		curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+	4- Verificamos que tenemos instalada correctamente la clave con el comando
+		sudo apt-key fingerprint 0EBFCD88
+	5.- Hacemos todos los pasos que dice la pagina
+	6.- Antes de instalas docker volvemos a usar el comando: sudo apt-get update
+	7.- Ahora lo que haremos sera instalar docker con el comando
+		sudo apt-get install docker-ce docker-ce-cli containerd.io
+	8.- Cuando termine de instalarse corremos docker con el comando
+		systemctl start docker
+	9.- Agregamos permisos al usuario para el uso de Docker en la pagina de docker
+	    nos vamos al menu de la izquierda y seleccionamos Optional Post Installation Steps
+		sudo usermod -aG docker Edwin
+	10.- Para saber si se esta corriendo docker usamos el comando docker ps
+	11.- Ahora para instalar Docker compose seguimos el siguiente link https://docs.docker.com/compose/install/
+
+		Para saber que version de docker-compose tenemos usamos el comando: docker-compose --version
