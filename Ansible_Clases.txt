@@ -1,0 +1,689 @@
+
+----------------------------------------------------- Ansible -------------------------------------------------------
+
+Ansible es una herramienta de TI que nos ayuda a automatizar nuestro pryecto en la parte de estructura programable
+desde las tareas mas simples hasta las más complejas, se tomaria como un libro de jugadas o instrucciones donde
+nostros podemos hacer un pipeline de los tipos de instrucciones a desarrollar como DevOps dentro de una
+
+
+
+------------------------- Clonando una maquina virtual
+
+Cuando nostros hacemos un clon de una maquina virtual, normalmente nos ayuda a que el clon no clona totalmente la
+maquina virtual sino solamente lo escencial y no consume mucho espacio ni requerimientos cuando son clonados y 
+siempre marcar la casilla 'Linked Clone' la cual es la que nos ayudara con la conexion de servidores gracias a
+Ansible pero para eso ocupamos SSH (Putty)
+
+Para la instalacion de Ansible debemos de ir a los siguientes enlaces y seguir las instrucciones:
+
+	https://docs.ansible.com/ansible/latest/installation_guide/index.html
+
+
+
+-------------------------- Notas sobre la instalacion
+
+Only 32bit VMs are listed in Virtual Box
+While creating VMs in Virtual box if only 32 bit vms are listed, kindly check on the following:
+
+	Check if Virtualization is enabled on your system. For this you must access the BIOS of your laptop and 
+	enable Virtualization if its not already enabled.
+
+	Check if Hyper-V is enabled on your system. If it is, ensure that it is disabled as two virtualization 
+	technologies cannot co-exist.
+
+Issues installing Ansible and its dependencies
+Once the Debian VM is up and running make the following changes to the /etc/apt/sources.list file to get the Ansible installation working right.
+
+	Comment the line starting 'deb cdrom'
+
+	Uncomment bottom two lines starting 'deb' and 'deb-src'
+
+	Add the below two lines:
+
+	deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
+	deb http://ftp.de.debian.org/debian sid main
+
+Final file:
+
+#
+# deb cdrom:[Debian GNU/Linux 8.9.0 _Jessie_ - Official amd64 DVD Binary-1 20170723-11:49]/ jessie contrib main
+#deb cdrom:[Debian GNU/Linux 8.9.0 _Jessie_ - Official amd64 DVD Binary-1 20170723-11:49]/ jessie contrib main
+#deb http://deb/debian.org/debian jessie main
+#deb-src http://deb.debian.org/debian stretch main
+deb http://security.debian.org/ jessie/updates main contrib
+deb-src http://security.debian.org/ jessie/updates main contrib
+# jessie-updates, previously known as 'volatile'
+# A network mirror was not selected during install.  The following entries
+# are provided as examples, but you should amend them as appropriate
+# for your mirror of choice.
+#
+deb http://ftp.debian.org/debian/ jessie-updates main contrib
+deb-src http://ftp.debian.org/debian/ jessie-updates main contrib
+deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main
+deb http://ftp.de.debian.org/debian sid main
+
+Once file is updated, run 'apt-get update' and then run 'apt-get install ansible'
+
+
+--------------------------- Enabling SSH on the VM
+
+If you need SSH enabled on the system, follow the below steps:
+
+Ensure the /etc/apt/sources.list file has been updated as per above
+
+Run the command: apt-get update 
+
+Run the command: apt-get install openssh-server
+
+Run the command: service sshd start
+
+
+
+----------------------------- FAQ
+
+I can not see the 64 bit versions of Operating Systems listed in Oracle VirtualBox
+
+	Make sure you have Virtualization Feature Enabled on your laptop.
+
+
+
+I can not see the 64 bit versions even though virtualization is enabled 
+
+	Turn off Hyper-V, in  "Turn Windows Features on or off" in control panel 
+
+
+
+
+
+------------------------------ Ansible Doc
+
+Para poder programar nuestro DevOps Ansible debemos de crear un archivo de tipo inventory (Inventory File's) para 
+poder hacer su respectiva programacion entre los servidores, el cual es un formato en lenguaje INI los cuales
+simplemente son servidores enumerados uno tras otro
+
+
+------------------- Alias para los servidores Ansible
+
+Para nosotros generar un alias a cada direccion de servidor solamente tenemos que  asignarle el nombre que queramos
+seguida de las siguientes lineas de codigo:
+
+	
+	server1.company.com
+	server2.company.com	<------- Ejemplo normal
+	server3.company.com
+	
+
+	web  ansible_host = server1.company.com	
+	db   ansible_host = server2.company.com		<-------- Con Alias
+	mail ansible_host = server3.company.com
+	
+
+
+En caso de que queramos ingresar el nombre de algun grupo a ese conjunto de servidores solo ponemos en la parte 
+superior de las direcciones de los servidores el nombre del grupo encerrado entre corchetes, ejemplo
+
+	server1.company.com
+	server2.company.com
+	server3.company.com
+	
+	[WEB]
+	server1.company.com
+	server2.company.com
+	server3.company.com
+		
+	[DB]
+	server1.company.com
+	server2.company.com
+	server3.company.com
+	
+
+
+
+------------------------ Parametros de Ansible
+
+Estos son algunos parametros que son de los mas utilizados en Ansible en el archivo inventory
+
+	1.- ansible_connection - ssh/winrm/localhost
+	2.- ansible_port - 22/5986
+	3.- ansible_user - root/administrator
+	4.- ansible_ssh_pass - Password
+
+
+	web  ansible_host = server1.company.com	
+	db   ansible_host = server2.company.com		<-------- Con Alias
+	mail ansible_host = server3.company.com
+
+
+	web  ansible_host = server1.company.com	ansible_connection = ssh
+	db   ansible_host = server2.company.com	ansible_connection = winrm	<-------- Con parametros y Alias
+	mail ansible_host = server3.company.com ansible_connection = ssh
+
+	NOTA: Asi es como decimos como nos vamos a estar conectando a estos 3 servidores, gracias a la ayuda del
+	      ansible_connection
+
+	NOTA: Si queremos conectarnos al servidor local, solaente asignamos la siguiente linea de comando
+		localhost ansible_connection = localhost
+
+
+
+---------------------- Que tipo de usuarios pueden conectarse al servidor
+
+Para poder asignar un rol al servidor sobre que tipo de usuarios pueden conectarse al servidor, tenemos que hacer
+una estructura como se muestra a continuación
+
+	
+	web  ansible_host = server1.company.com	ansible_connection = ssh    ansible_user = root
+	db   ansible_host = server2.company.com	ansible_connection = winrm  ansible_user = admin <-------- Con user
+	mail ansible_host = server3.company.com ansible_connection = ssh    ansible_user = root
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------ Ejemplo de Ansible -------------------------------------------------
+
+Para poder realizar con exito un ejemplo basico de Ansible debemos de seguir la siguiente linea de pasos:
+
+1.-[Verificar la conectividad SSH con los servidores]
+
+	Para esto tenemos que irnos a nuestra terminal en nuestro SO y poner las siguientes lineas de comando las 
+	cuales son de coneccion:
+
+	1.- ssh [Numeor de IP de nuestro servidor]
+	2.- presionamos Yes y tenemos que conectarnos al otro servidor, para salirnos solo damos esribimos exit
+	3.- Creamos un directorio nuevo de pruebas con el comando 'mkdir [nombre_del_directorio]'
+	4.- Creamos un archivo para la configuracion de Ansible con 'cat > [nombre_del_archivo.txt]'	
+	5.- Una vez dentro del archivo especificamos el servidor al que nos enlazaremos con su passwd, ejemplo
+
+		tarjet1 ansible_host = 192.168.0.102 ansible_ssh_pass = onboxes.org
+
+	6.- Especificamos un modulo de ping con nuestro archivo, el cual realizara un ping al servidor, ejemplo
+
+		ansible tarjet1 -m ping -i [nombre_del_archivo].[extension]
+
+	NOTA: En caso de que nos salga un error al momento de querer realizar una coneccion, debemos de asegurar
+	      que los servidores tengan una coneccion con el otro servidor dentro de sus registros, realizando
+	      un simple SSH manual desde cada uno de los servidores al sistema destino (Un ping entre todos pues)
+	      para que todos esten conocidos en el servicio Ansible
+
+			ssh [IP de los servidores]
+			ssh 192.168.1.111
+
+
+	NOTA: Si no queremos tener las llaves de verificacion para todos los servidores, debemos de configurar
+	      nuestro documento inventory para el servidor de la siguiente manera (NO RECOMENDABLE):
+
+			1.- Tecleamos 'vi /etc/ansible/'
+			2.- Entramos al archivo de configuracion de Ansible 'vi /etc/ansible/ansible.cfg'
+			3.- Buscamos la opcion '#host_key_checking' y le quitamos el '#'
+			4.- Guardamos la configuracion y LISTONGO! :D
+
+	Escenario de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_inventory
+
+
+
+
+
+------------------------------------- YAML
+
+Un archivo YAML son todos los playbooks de Aansible en donde estan diseñados los cuales son archivos o documentos de
+configuracion que estan escritos en este lenguaje YAML, muy parecido a los archivos XML o JSON, los cuales nos
+ayudara que sea mas familiar el entorno, solo que en YAML estan definidos como tipo clave/valor
+
+
+	*Clave Valor
+
+	Fruits: Apple
+	Vegetable: Carrot
+	Liquid: Water
+
+	
+	*Matriz:
+	Fruits:
+	- Orange     <----- La linea '-' indica que es un elemento que pertenece a una matris
+	- Apple
+
+	Vegetables:
+	- Carrot
+	- Tomato
+
+
+	*Diccionario (Conjunto de propiedades agrupados bajo un articulo)
+	Banana:
+		Calories: 105
+		Fat: 0.4g
+		Carbs: 27g
+
+	Grapes:
+		Calories: 105
+		Fat: 0.4g
+		Carbs: 27g
+
+		NOTA: OJO con los espacios aqui ya que todos deben de tener los mismo
+		      o nos arrojara un error de usar un HashMpap, un diccionario no tiene un orden
+		      mientras que un List si tiene un orden
+
+
+
+	Escenario de ejmplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_yaml
+
+
+
+
+
+
+
+
+------------------------------ Playbooks de Ansible
+
+Son los archivos o estructura de un documento YAML en donde especificamos lo que queremos que haga Ansible por 
+nosotros, ejemplo de las instrucciones en un archivo YML
+
+	'Playbook.yml'
+	
+	-
+		host: localhost
+		name: Play 1
+		task:
+			- name: Execute command 'date'
+			  command: date
+
+			- name: Exeute script on server
+			  script: test_script.sh
+	
+
+Inclusive podemos divir un plabook en diferentes listas de ejecución de tarea, no simplemente una, donde cada tarea
+sera representada por el guion '-' para especificar una nueva tarea, ejemplo:
+
+	'Playbook.yml'
+	
+	-
+		host: localhost
+		name: Play 1
+		task:
+			- name: Execute command 'date'
+			  command: date
+
+			- name: Exeute script on server
+			  script: test_script.sh
+
+
+	-
+		name: Play 2
+		host: localhost
+		task:
+			- name: Start Web Server
+			  service:
+				name: httpd
+				state: started
+
+			- name: Install Web Service
+			  yum:
+				name: httpd
+				state: present
+
+
+	NOTA: Para realizar el playbook tenemos que asegurarnos que tipos de Host seran a los que se realizaran esto
+	      ya que una vez que ejecutemos el archivo inventory este tendra que guiarse mediante el Host que 
+	      especificamos en el archivo YML, asegurandonos que el grupo del host se definio por primera vez en el
+	      archivo inventory, asi que, el host en el playbook y en el archivo inventory deben de coincidir
+
+
+	
+Para ejecutar ahora si el libro de jugadas usamos el siguiente comando 'ansible-playbook playbook.yml' o si queremos
+saber los distintos tipos de opciones que tenemos de ansible, usamos 'ansible-playbook --help'
+
+
+
+
+
+--------------------- Correr una Test de Ansible
+
+Una vez que tenemos nuestros archivos especificados tanto el Inventory como el Playbook, ahora podemos correrlos con
+la siguiente linea de comandos:
+
+	1.- Si solo queremos hacer un ping sin la necesidad de implementar un playbook, solo para coneccion, usamos:
+
+		ansible all -m ping -i inventory.txt  <---- El inventory es donde almacenamos la conexion a los servs
+
+	2.- Usarlo desde un archivo YAML (usar la extencion YAML o YML es la misma, no importa), hacemos los 
+	    siguientes pasos:
+	
+		1.- vi playbook-pingtest.yaml
+		2.- Creamos el archivo de configuracion
+
+			-
+			  name: Test connectivity to targets servers
+			  hosts: all
+			  tasks:
+				- name: Ping test
+				  ping:  <--- Cuando se requiere de un ping no necesita atributo
+		
+		3.- Guardamos el archivo
+		4.- Para ejecutar usamos el comando 'ansible-playbook playbook-pingtest.yaml -i inventory.txt'
+
+				ansible-playbook [Nombre_del_archivo_playbook] -i [archivo_inventory]
+
+
+
+	Ejercico de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_playbook
+
+
+
+
+
+
+------------------------ Modulos de Ansible
+
+
+Los modulos de ansible estan categorizados por distintos tipos de funcinalidades, alugnos de ellos son los siguientes
+son instrucciones a nivel de sistema para modificar usuarios, grupos, sistema, et...
+
+	* System
+	* Commands
+	* Files
+	* Database
+	* Cloud
+	* Windows
+	* More...
+
+	* System:
+		*User
+		*Group
+		*Hostname
+		*Iptables
+		*Lvg
+		*Lvol
+		*Make
+		*Mount
+		*Ping
+		*Timezone
+		*Systemd
+		*Service
+
+	* Commands:
+		*Command
+		*Expect
+		*Raw
+		*Script
+		*Shell
+	
+	* Files:
+		-Acl
+		-Archive
+		-Copy
+		-File
+		-Find
+		-Lineinfile
+		-Replace
+		-Stat
+		-Template
+		-Unarchive
+
+	* Database:
+		-Mongodb
+		-Mysql
+		-Mssql
+		-Postgresql
+		-Proxysql
+		-vertica
+
+	* Cloud:
+		-Amazon
+		-Atomic
+		-Azure
+		-Centrylink
+		-Cloudscale
+		-Cloudstack
+		-Digital Ocean
+		-Docker
+		-Google
+		-Linode
+		-Openstack
+		-Rackspace
+		-Smartos
+		-Softplayer
+		-VMware
+
+	* Windows:
+		-Win_copy
+		-Win_command
+		-Win_domain
+		-Win_file
+		-Win_iss_website
+		-Win_msg
+		-Win_msi
+		-Win_package
+		-Win_ping
+		-Win_path
+		-Win_robocopy
+		-Win_regedit
+		-Win_shell
+		-Win_service
+		-Win_user
+
+
+	Ejercicio de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_modules
+
+
+
+
+
+
+
+-------------------------- Variables de Ansible
+
+Normalmente usaremos un playbook el cual estara enlazado a cientos de servidores y para no tener que estar agregando
+cada enlace al playbook podemos usar variables cuya intencion sea ir a buscar dentro de nuestro archivo inventory
+los datos ya establecidos y asignarlos dentro de cada uno de los elementos de nuestro archivo yaml, para la
+asignacion de variables en el playbook se usas las Dobles llaves {{variable}}, ejemplo
+
+
+	'Playbook.yml'
+	
+	-
+		host: web
+		name: Play 1
+		task:
+			- firewalld:
+			     service: https
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     port: 8081/tcp
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     port: 161-161/udp
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     source: 192.0.0.2/24
+			     zone: internal
+			     state: enabled
+
+	-
+		host: localhost
+		name: Play 2
+		task:
+			- firewalld:
+			     service: https
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     port: '{{http_port}}'/tcp
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     port: '{{snmp_port}}'/udp
+			     permanent: true
+			     state: enabled
+
+			- firewalld:
+			     source: '{{inter_ip_range}}'/24  <--- No se olviden de poner las comillas antes del {{}}
+			     zone: internal
+			     state: enabled
+
+
+
+	#Simple inventory file
+
+	web http_port=8081 snmp_port=161-161 inter_ip_range= 192.0.0.3
+
+
+
+	Ejercicio de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_variables
+
+
+
+
+
+
+
+------------------------------ Condicionales en Ansible
+
+Normalmente nos encontraremos con situaciones en donde necesitaremos de un condicional cuando encontremos ciertos
+archivos que sean muy parecidos y queramos combinarlos dentro de un solo playbook, para hacer un condicional
+agregaremos el campo 'when' seguido de la instruccion, ejemplo:
+
+		
+	-
+		host: localhost
+		name: Play 2
+		task:
+			- name: Open service with Debian
+			  apt: 
+			     name: nginx
+			     state: present
+			  when: ansible_os_family == "Debian"
+	
+			- name: Open service with Oracle
+			  apt: 
+			     name: nginx
+			     state: present
+			  when: ansible_os_family == "Oracle" and
+				ansible_os_family == "Debora" or
+				ansible_os_family == "Google" and
+
+	Ejercicio de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_conditionals
+
+
+
+
+
+-------------------------- Loops de Ansible
+
+Habra momentos en los que declarar ciertas sentencias seria muy tedioso y poco lucrativo a la vista al momento de
+programar y que cuando se generan estos tipos de situaciones es mejor hacerlos con un loop, para generar un loop
+solo debemos de agregar el atributo 'loop' 
+
+
+	-
+		host: localhost
+		name: Play 2
+		tasks:
+			- user: name='{{item}}'   state=present
+			  loop:
+			     -joe
+			     -albert
+			     -alex
+			     -bryan
+			     -edwin
+			       
+En caso de que nuestro loop no nada más contenga strings o numeros y sea un diccionario entonces la estructura
+cambiara de la siguiente manera:
+
+	-
+		host: localhost
+		name: Play 2
+		tasks:
+			- user: name='{{item.name}}'   state=present uid='{{item.uid}}'
+			  loop:
+			     -name: joe
+			      uid: 1010
+			     -name: edwin
+			      uid: 1011
+			     -name: alex
+			      uid: 1012
+
+
+Podemos cambiar la sentencia de 'loop' por la de 'with_*' dependiendo del tipo de datos que manejemos podemos 
+usar diferentes tipos de loops, ejemplo
+
+	with_items			with_nested
+	with_file			with_nios
+	with_url			with_openshift
+	with_mongodb			with_password
+	with_dict			with_pipe
+	with_etcd			with_rabbitmq
+	with_env			with_redis
+	with_filetree			with_sequence
+	with_ini			with_skydive
+	with_inventory_hostnames	with_subelements
+	with_k8s			with_templates
+	with_manifold			with_varnames
+	with_toghetesr			
+
+	Ejercicio de ejemplo:
+
+	https://legacy.kodekloud.com/p/ansible-practice-test/?scenario=questions_ansible_loops
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
