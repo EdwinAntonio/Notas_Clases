@@ -1,0 +1,92 @@
+
+-------------------------------------------------- Mongo DB ---------------------------------------------------------
+
+MongoDB es una base de datos tipo documental que no es relacional como lo viene siendo SQL, no relacional quiere
+decir que su almacenamiento de datos no se encuentrar relacionados uno con otros de forma predeterminada pero
+que se pueden acceder a ellos con una clave de valor unica de registro, cada uno de estos registros los almacena
+en formato JSON
+
+Tiene una estrucutra muy flexible para los tipos de datos y escalamientos que queramos almacenar en la base de datos
+lo cual hace más facil el uso de esta herramientas en aplicaciones con mucho movimiento y almacenamiento de datos
+
+
+
+----------------------------------- Instalacion de MongoDB (Windows)
+
+Para hacer la instalacion de MongoDB debemos de seguir los sieguientes pasos:
+
+	1.- Ir al siguiente enlace y descargar el instalador dependiendo de los requerimientos de tu maquina
+		
+			https://www.mongodb.com/try/download/community
+
+	2.- Se recomienda descargar 3T para tener una version más optima y grafica al momento de crear bases de datos
+	    en MongoDB
+
+			https://studio3t.com/download/
+
+		(NOTA: El puerto por donde normalmente MongoDB escucha es por el puerto 27017)
+
+	3.- Al momento de la instalacion de 3T de preferencia hay que elegir el estado de codigo para un uso más
+	    entendible como programador
+	4.- Para hacer la conexion de 3T a nuestro MongoDB Server tenemos que irnos a la parte de Connect en 3T
+	    agregamos una nueva connection a una base de datos y si todo sale bien debe de reconocer el puerto 27017
+	    ponemos cualquier nombre a nuestra coneccion, en nuestro caso fue 'local', damos Ok y listo
+
+	5.- Podemos crear las bases de datos en nuestro servidor MongoDB en caso de querer apagar el puerto nos vamos
+	    a services en windows y buscamos 'MongoDB' y lo apagamos o encendemos
+
+
+
+
+--------------------------- Crear una nueva Collecion
+
+	1.- Vamos a nuestra Collection, damos click derecho/add collection/[Nombre de la collecion]/ok
+	2.- En caso de que nos salga en tablas la estructura, vamos al fondo de la barra de herramientas y en donde
+	    dice 'Table View' cambiamos por 'JSON view'
+
+
+--------------------------- Crear un nuevo Documento
+
+	1.- Damos click en el icono de add document y nos desplegara una ventana en formato JSON que nos indicara
+	    como queremos que sea le estructura nuestro documento, ejemplo
+
+		{
+    			"name" : "JSON",
+    			"email": "json@gmail.com",
+    			"department" : {
+     				"department_name" : "GBS",
+     				"location" : "Mexico"   
+    			}
+		}
+
+		---------------- Para asignar más documentos dentro de un documento en forma de objetos
+
+		{ 
+    			"name" : "Documents", 
+    			"email" : "doc@gmail.com", 
+    			"subjects" : [
+        			{
+            				"subject_name" : "Boris", 
+            				"marks_obtained" : 70.0
+        			}, 
+        			{
+            				"subject_name" : "Aris", 
+            				"marks_obtained" : 80.0
+        			}
+    			], 
+    			"_id" : ObjectId("617c3c2746fd2647d60d9e75")
+		}		
+
+
+		(NOTA: Los ID's son asignados automaticamente por MongoDB y son claves de valores unicos que no se
+			volveran a repetir, para poder identificar mejor cada doducmento)
+
+
+
+
+
+
+
+
+
+

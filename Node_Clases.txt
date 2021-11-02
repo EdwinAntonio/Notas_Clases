@@ -1,0 +1,308 @@
+
+------------------------------------------ Instalacion de Node.JS ---------------------------------------------------
+
+	1.- Ir a la siguiente URL https://nodejs.org/en/
+	2.- Descargamos la version LTS ya que es la que contiene un mejor soporte
+	3.- Damos aceptar/next a todos los terminos
+	4.- Dejamos que se instale y listongo (Así es, no es complicado xd)
+
+
+	(NOTA: Cuando queramos entrar a la consola de node solo escribimos node en el bash y damos enter, para salir
+		tecleamos <.exit> o si queremos más ayuda tecleamos <.help>)	
+
+
+---------------------------------- Que es Node.JS 
+
+Es un framework que nos ayuda a tener una interaccion en modo servidor a la programacion o lanzamiento de nuestro 
+proyecto, como su nombre lo dice usa lenguaje Javascript para el cual nosotros podremos estar familiarizado a lenguaje
+como lo es JAVA, utiliza protocolos HTTP (Hypert Text Transfer Protocol) para poder entrar a un entorno web y crear
+servidores web, interfaces, aplicaciones, etc.. 
+
+Asi que podemos correr aplicaciones en el servidor en vez de
+solamente de forma local proporcionandonos herramientas necesarias o bibliotecas para la configuracion de nuestro
+servidor WEB
+
+Este utiliza un motor JavaScript llamado V8, el cual puede construir las lineas de codigo que nuestro chrome o
+en este caso nuestro framework Node.js y al final retornar el resultado a lo que viene siendo el framework ya que
+Node.js no sabe como construir en js y para eso ocupa ayuda de un interprete como lo es V8
+
+	(NOTA: Tanto V8, node.js, chrome, son hechos en lenguaje C++ por eso es que pueden comunicar los resultados)
+
+
+
+
+
+
+-------------------------- Usando Node.JS
+
+Para saber que tipo de componenctes puedo utilizar dentro de la consola de Node, ponemos la palabra <global> y 
+tendremos una lista de todos los componentes y funciones que podemos implementar dentro de nuestro lenguaje JS
+
+
+
+		------------- Creando un nuevo archivo con node.js
+
+//Así se agregan modulos a un documento
+
+const fs = require('fs')
+
+
+		//Archivo   ,  Texto a almacenar
+fs.writeFileSync("notes.txt","This file was created by node.js")  <---- Cada vez que agregamos un docmento lo sobreescribe
+									para agregar texto aparte del que ya esta
+									usamos appendFileSync()
+		  // Archivo            , Texto a almacenar	
+fs.appendFileSync('[Nombre_del_archivo]','[Nuevo_texto]')
+
+
+
+		(NOTA: Para almacenar saltos de linea usamos '\n')
+
+
+
+
+
+------------------------- Importando modulos a Node.js
+
+Para poder importar modulos dentro de nuestro archivo Node.js o dentro de uno de nuestros proyectos usaremos 
+el metodo <require([Nombre_del_modulo])>, este metodo nos retornara un objeto del modulo al que queramos agregar a
+nuestro documento o proyecto y para eso debemos de almacenarlo dentro de una variable para hacer referencia a ese
+objeto que retorna, quedando como el siguiente ejemplo:
+
+
+	const fs = requiere('fs')   <--- Estos tipos de modulos ya se encuentran en el nucelo de Node, para saber
+					 mas sobre que modulos hay, vayamos a la documentacion de node
+
+						https://nodejs.org/en/docs/
+
+					 Seleccionamos la version LST y vamos viendo en la lista izquierda toda
+					 las clases de modulos que podemos implementar
+
+
+
+	(NOTA: Si queremos mandar a andar una aplicacion de node solo escribimos node [archivo])
+
+
+
+
+
+--------------------------- Importando mis propios modulos creados
+
+Para que podamos importar de un archivo a otro los objetos que se encuentran dentro de nuestro objeto usaremos el
+comando 'model.export', este modelo nos ayudara a exportar todos aquellos atributos u objetos que contenga nuestro
+archivo a otro y solamente donde vamos a mandar a llamar ese modulo usamos el mismo comando de require('[Modulo]')
+ejemplo:
+
+1.-[app.js]
+
+	const name =  require('./util.js')
+
+	console.log(name)	
+
+2.-[util.js]
+
+	console.log('./utils.js')
+
+	const name = 'Edwin'
+
+	module.exports = name  //Lo que vamos a exportar, ojo que solo se puede exportar 1 cosa por documento
+
+3.-Salida
+
+	./utils.js
+	Edwin
+
+
+
+
+	----------------------- Podemos inclusive exportar funciones
+
+	1.-[app.js]
+
+	const add = function(a,b){
+    		return a-b
+	}
+
+	module.exports = add
+
+
+
+	2.-[util.js]
+
+	const add =  require('./util.js')
+	const name =  require('./util.js')
+
+	console.log(add(4,-2))
+	console.log(name)
+
+
+	3.-Salida
+	
+	6
+	Edwin
+
+
+
+--------------------------- Importando modulos NPM     https://www.npmjs.com/
+
+Para importar o instalar modulos npm en nuestro proyecto solo nos vamos hasta la ruta de nuestro proyecto en la 
+terminal y agregamos la siguiente linea de codigo
+
+	npm init
+
+	(NOTA: De recomendación usar una version de npm superior a 5.0.0)	
+
+	Si queremos instalar un modulo para la verificacion de datos lo hacemos con npm i validator@[version]
+
+		npm i validator@10.8.0
+
+	Mas ejemplos en esta pagina https://www.npmjs.com/
+
+
+Estos modulos nos ayudan para la configuracion de nuestro proyecto al momento de su desarrollo y de su lanzamiento
+haciendo que podamos almacenarlo en un repositorio, subirlo a algun servidor web, configurarlo, etc
+
+
+
+
+	-------------------------- ¡¡DATO EXTRA!!
+
+	Si queremos tener un estilo de colores al momento de la impresion de nuestros datos en terminal, podemos 
+	instalar un modulo para su personalizacion de colores, con las lineas de codigo
+
+			npm install chalk@[version]		---> npm install chalk@4.1.2
+
+	Para mas informacion vea la pagina de https://www.npmjs.com/package/chalk 
+
+	const chalk = require('chalk')
+
+	console.log(chalk.green(name))
+
+	ó
+
+	console.log(chalk.green.inverse.bold(name))
+
+
+
+
+
+--------------------------- Modulo NPM para la autoejecucion de proyecto https://www.npmjs.com/package/nodemon
+
+Cuando nosotros queramos instalar un modulo de forma global (Osea que se encuentre en nuestro sistema operativo en 
+vez de estarlo instalando a cada rato dentro de nuestros proyectos), para que sea una instalación de forma global
+usaremos el termino '-g' despues de insertar el codigo de una instalación, ejemplo
+
+
+	npm i nodemon@[version] -g	------------> 		npm i nodemon@2.0.14 -g
+
+
+	Para ejecutar el modulo en vez de ejecutar nuestra aplicacion como siempre lo hacemos con 'node [archivo]'
+	ahora usamos el termino 'nodemon [archivo]' de esta manera se ejecutara automaticamente cada vez que 
+	realicemos una modificación
+
+	Para salir de la terminal de nodemon usamos 'Ctrl + C'
+
+
+
+				NOTA: Si por algun motivo nos sale el error
+
+nodemon : File C:\Users\103413781\AppData\Roaming\npm\nodemon.ps1 cannot be loaded because running scripts is disabled on this 
+system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
+At line:1 char:1
++ nodemon --version
++ ~~~~~~~
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+
+
+	Para solucionarlo usamos la siguiente solucion
+
+	1.- Vamos a PowerShell y le damos ejecutar como administrador
+	2.- Set-ExecutionPolicy Unrestricted
+	3.- Vemos la version de nodemon con 'nodemon -v' 
+	4.- Si nos sale la version que instalamos entonces estamos listos!
+
+	Para regresar al sistema de seguridad de ejecucion, realizamos los mismos pasos solo que en el paso 2 usamos
+	el comando 'Set-ExecutionPolicy Restricted' y si en el paso 3 nos sale el mismo error entonces volvimos a 
+	levantar el sistema de seguridad
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
