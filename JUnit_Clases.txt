@@ -20,9 +20,13 @@ Para crear pruebas de testing con JUnit e inclusive Mockito, necesitaremos crear
 proyecto la cual ira almacenando cada uno de los resultados y evaluando cada fase con estas herramientas para
 eso necesitamos ir a nuestro proyecto y hacer lo siguiente:
 
-	1.- [En src creamos una carpeta nueva y la llamamos test]
+	(NOTA: El nombre del paquete que creemos en src tiene que llamarse igual que el paquete que crearemos en
+	       la nueva carpeta de Test)
+
+	1.- [En nuestro proyecto creamos una carpeta nueva con clickD y la llamamos test]
 	2.- Damos clickD y le decimos "Mark Directory as" y seleccionamos "Test Sources Root"
-	3.- Debemos de tener exactamente lo mismo en nuestra carpeta que vamos a testear
+	3.- Debemos de tener exactamente lo mismo en nuestra carpeta que vamos a testear igual a la de src en paquetes
+	    solo que antes de crear los documentos dentro de del paquete en test debemos hacer lo siguiente
 	
 	---- Insertamos JUnit a nuestro proyecto ya que no viene por defecto
 	4.- Para eso nos vamos a "File" y seleccionamos "Project structure"
@@ -30,7 +34,7 @@ eso necesitamos ir a nuestro proyecto y hacer lo siguiente:
 	    maven
 	6.- En la barra de busqueda buscaremos org.junit.jupiter:junit-jupiter-api y buscamos las recientes
 	    (OJO: no seleccionar las que digan RC1 o M1 ya que esas son Release Content y presentan bugs)
-	    (NOTA: En caso de querer instalar JUnit4, recomendamos instalar junit:junit:4.10 ya que puede 
+	    (NOTA: En caso de querer instalar JUnit4, recomendamos instalar junit:junit:4.12 o 4.13 ya que puede 
 	    	   usar correctamente @RunWith(Cucumber.class) sin problemas ;D )
 	7.- Despues de dar OK, nos dira a que proyecto agregara las librerias y damos OK
 	8.- Listongo, a comer! :D 
@@ -88,7 +92,7 @@ errores al momento del testing, siempre se debe de realizar el siguiente diagram
 	3.- Escribir el minimo codigo requerido para hacer que la prueba de exito a lo que queremos
 	4.- Cada test debe de validar 1 simple pieza logica y no más
 
-	Siempre es bueno comenzar con una marca de error para ver si funciona, para eso añadimos el
+	Siempre es bueno comenzar con una marca o pruebas para errores para ver si funciona, para eso añadimos el
 	siguiente codigo por verificar que todo esta funcionando "bien" ya que nos tiene que marcar un error
 	de tipo Assert, si sale así es por que todo esta FINE! 
 
@@ -97,10 +101,36 @@ errores al momento del testing, siempre se debe de realizar el siguiente diagram
 		fail();
 	}
 
+	Uno de los metodos que nos ayudaran siempre a saber si los resultados en nuestro Test son correctos o no es
+	el assertTest(), siempre nos ayudara a hacer que la estructura de los resultados obtenidos sean Success o Fail
+
+
+	Asi que la recomendación para hacer testing siempre debe de hacerse primero a los errores y despues a los
+	casos de éxito
+
+	(NOTA: Cosa curiosa, colocar siempre el cursor al inicio de cada archivo de testing ya que donde localizas 
+	       el cursor dentro del archivo es sobre cual prueba de testing realizara, mientras que si lo ponemos
+	       al inicio correra todo el archivo)
 
 
 
+--------------------------- Asserts()
 
+Dentro de JUnit4 podemos generar distintos tipos de Asserts por cada fucnion Test que deseemos implementar, pero
+cada uno de ellos debe de tener una diferencia para que pueda identificar de que tipo de resultado se trata
+
+	JUnit4
+	Para hacer la descripcion de cada uno de los resultados con su respectiva descripcion se hace de la siguiente
+	manera, ejemplo:
+		
+		assertTrue("First result", result);
+
+
+	JUnit 5
+	Para hacer la misma descripcion pero en JUnit5 es lo mismo pero nada más que se comienza primero por el 
+	resultado y despues por la descripcion del resultado, ejemplo:
+
+		assertTrue(result, "First result");		
 
 
 
