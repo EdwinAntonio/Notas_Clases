@@ -271,7 +271,7 @@ spring-boot-starter-data-mongodb
 
 	private List<Subject> subjects;
 	
-	@Transient
+	@Transient  <---- Esta notacion ayuda a que cuando queramos guardar o actualizar datos, ignore este campo 
 	private double percentage;
 
 	public String getId() {
@@ -720,6 +720,31 @@ cada uno de los servicios
 	public List<Student> emailLike(@RequestParam String email) {
 		return studentService.emailLike(email);
 	}
+
+	/*Cuando queramos hacer busqueda mediante un campo el cual contenga una cierta frase en especifico usamos
+	la notacion IsLike en nuestra Interface/Repository 
+	ejemplo:
+
+		List<Student> findByEmailIsLike(String email);
+
+	(NOTA: Este tipo de datos como IsLike, IsNotLike, IsNotNull, NotLike, Equals, etc... se les conoce como 
+	JPA Keywords)
+
+		https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods
+		https://www.baeldung.com/spring-data-derived-queries
+		https://attacomsian.com/blog/derived-query-methods-spring-data-jpa
+
+	Aquí el tipo de dato en nuestra entidad Student es Subject pero ademas le agregamos el nombre del campo 
+	de los objetos de documento al que queremos tener acceso, accedemos de la siguiente manera en Postman:
+
+		http://localhost:8080/api/student/emailLike?email=hotmail
+
+	(NOTA: Tener en cuenta que los nombres del metodo de la interfaz se hace con los nombres de las variables 
+	que se crearon en los entity documents, y la variable que colocaremos en la URL es la que asignamos en el
+	@RequestParam de nuestro Controlador)
+
+	*/
+
 	
 	@GetMapping("/nameStartsWith")
 	public List<Student> nameStartsWith(@RequestParam String name) {
@@ -741,20 +766,166 @@ aparezcan en 4 ventadas de 25 resultados cada uno, para eso nos sirve la paginac
 	
 
 
+------------------------------- @DBRef
+
+Esta notacion nos ayuda para cuando tengamos que enlazar varios Documentos dentro de nuestra Entidad principal y que
+se pueda hacer referencia a cada campo de un Documento distinto, ejemplo:
+
+	----------------------- [Entidad Foranea]
+
+	package com.example.entity;
+
+	import org.springframework.data.mongodb.core.mapping.Field;
+	
+	@Document (name = "subject")
+	public class Subject {
+
+	@Field(name = "subject_name")
+	private String subjectName;
+
+	@Field(name = "marks_obtained")
+	private int marksObtained;
+	...
+	}
+
+	----------------------- [Entidad Foranea]
+
+	package com.example.entity;
+
+	import org.springframework.data.mongodb.core.mapping.Field;
+
+	@Document (name = "department") <---- Esto indica que estos documentos son separados o unicos
+	public class Department {
+
+	@Field(name = "department_name")
+	private String departmentName;
+
+	private String location;
+	...
+	}
+
+	----------------------- [Entidad Principal]
+	
+	@Document(collection = "student")
+	public class Student {
+
+	...
+
+	@DBRef <----- Así es como se hace referencia a documentos seperados del principal y acceder a sus datos
+	private Department department;
+
+	@DBRef
+	private List<Subject> subjects;
+	
+	}
 
 
 
 
 
+----------------------- Lazy mode para @DBRef
+
+Cuando nosotros queramos no mostrar documentos una vez que hacemos referencia a una lista de objetos de tipo documentos
+entonces agregamos al lazy mode en True, por Default el lazy mode viene como False pero si queremos cambiarlo solo
+ponemos 'lazy = true' esto hace que el proceso de obtencios de datos no se lleve a cabo, ejemplo
+
+	@DBRef <----- Mostrara los datos de Department ya que el lazy por defecto esta en False
+	private Department department;
+
+	@DBRef (lazy = true) <----- No mostrara los datos de Department ya que el lazy se cambio por True
+	private List<Subject> subjects;
 
 
 
 
+	----------------------- Repositorios para @DBRef
+
+	Una vez que tenemos nuestros documentos enlazados, tenemos que hacer un respectivo repositorio para cada uno
+	de estas colleciones ya que cada uno debera contener sus propios metodos para poder obtener un dato hacia esa
+	estructura, ejemplo:
+
+
+	--------------------------- [com.[X].interface]/[com.[X].repository]
+
+	package com.example.repository;
+
+	import java.util.List;
+
+	import org.springframework.data.mongodb.repository.MongoRepository;
+	import org.springframework.stereotype.Repository;
+
+	import com.example.entity.Department;
+
+	@Repository
+	public interface DepartmentRepository extends MongoRepository<Student, String> {
+
+	}
+
+
+	--------------------------- [com.[X].interface]/[com.[X].repository]
+
+	package com.example.repository;
+
+	import java.util.List;
+
+	import org.springframework.data.mongodb.repository.MongoRepository;
+	import org.springframework.stereotype.Repository;
+
+	import com.example.entity.Subject;
+
+	@Repository
+	public interface SubjectRepository extends MongoRepository<Student, String> {
+
+	}
+
+
+	(NOTA: Siempre que vayamos a usar cada uno de estos repositorios debemos de colocar su respectivo @Autowired
+	para la enjeccion de dependencias dentro de la clase donde los vayamos a usar [Donde normalmente es en 
+	el Service] quedando de la siguiente manera)
+
+		------------- [com.[X].service]
+
+		@Autowired
+		SubjectRepository subjectRepository;
+
+		@Autowired
+		DepartmentRepository departmentRepository;
+
+		public Student createStudent (Student student) {
+			/*De esta manera almacenamos en una collecion distinta a nuestra entidad principal*/
+			if( student.getDepartment() != null ){ 
+				departmentRepository.save(student.getDepartment());
+			}
+			/*De esta manera almacenamos en un objeto de colleciones distinto a nuestra entidad principal*/
+			if( student.getSubject() != null && student.getSubject() > 0){
+				subjectRepository.saveAll(student.getSubject());	
+			}
+			return studentRepository.save(student);
+		}
+		
 
 
 
+-------------------------- Notacion @Query
 
+Cuando nosotros queramos hacer un query nativo dentro de MongoDB podemos hacerlo con la notacion @Query en nuestra
+interfaz o repositorio y de esta manera la asignación dentro de una URL se puede asignar de forma mas sencilla,
+ejemplo:
 
+	@Query ("{\"name\" : \"?0\" }") <--- La notación '?0' indica que en esa parte del query se asignara el valor que contenga la variable 'name' asginada en nuestro metodo
+	List<Student> getByName(String name); 
+
+----------------- [Servicio]
+
+Aquí cambiamos lo que viene siendo la referencia a nuestro nuevo metodo, ejemplo
+
+	public List<Student> getStudentsByName (String name) {
+		return studentRepository.getByName(name);	<---- Cambiamos de findByName por getByName y listo
+	}
+
+Como se vería esto haciendolo desde la URL mediante Postman se tendría que hacer de la siguiente manera
+
+	http://localhost:8080/api/student/studentsByName/Jhon
 
 
 
