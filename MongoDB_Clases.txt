@@ -235,6 +235,542 @@ spring-boot-starter-data-mongodb
 
 
 
+---------------------- Pasos para la creacion de un proyecto REST con MongoDB
+
+
+1.- [Paquete de Entidades]
+	Primero tenemos que crear las entidades con la que estaremos haciendo realcion con los campos a nuestra base
+	de datos 
+
+	(NOTA: Recordemos que cada uno de estos debe de llevar su respectivo setter's y getter's, su constructor
+	y su respectivo toString para ver los resultados en terminal cuando ejecutemos)
+	
+	--------------------------------
+
+	package com.example.entity;
+
+	import java.util.List;
+
+	import org.springframework.data.annotation.Id;
+	import org.springframework.data.annotation.Transient;
+	import org.springframework.data.mongodb.core.mapping.Document;
+	import org.springframework.data.mongodb.core.mapping.Field;
+
+	@Document(collection = "student")
+	public class Student {
+
+	@Id
+	private String id;
+
+	private String name;
+
+	@Field(name = "mail")
+	private String email;
+
+	private Department department;
+
+	private List<Subject> subjects;
+	
+	@Transient
+	private double percentage;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public List<Subject> getSubjects() {
+		return subjects;
+	}
+
+	public void setSubjects(List<Subject> subjects) {
+		this.subjects = subjects;
+	}
+
+	public double getPercentage() {
+		if (subjects != null && subjects.size() > 0) {
+			int total = 0;
+			for (Subject subject : subjects) {
+				total += subject.getMarksObtained();
+			}
+			return total/subjects.size();
+		}
+		return 0.00;
+	}
+
+	public void setPercentage(double percentage) {
+		this.percentage = percentage;
+	}
+	}
+
+
+	------------------ [com.x.entity]
+
+	package com.example.entity;
+
+	import org.springframework.data.mongodb.core.mapping.Field;
+
+	public class Subject {
+
+	@Field(name = "subject_name")
+	private String subjectName;
+
+	@Field(name = "marks_obtained")
+	private int marksObtained;
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	public int getMarksObtained() {
+		return marksObtained;
+	}
+
+	public void setMarksObtained(int marksObtained) {
+		this.marksObtained = marksObtained;
+	}
+	}
+
+
+	------------------ [com.x.entity]
+
+	package com.example.entity;
+
+	import org.springframework.data.mongodb.core.mapping.Field;
+
+	public class Department {
+
+	@Field(name = "department_name")
+	private String departmentName;
+
+	private String location;
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	}
+
+
+
+
+2.- [Paquete de nuesta clase principal - DEMO]
+
+Esta es la creacion de nuestra main class de donde estaremos ejecutando nuestra aplicacion
+
+
+	---------------------- [com.[X].demo]
+
+	package com.example.demo;
+
+	import org.springframework.boot.SpringApplication;
+	import org.springframework.boot.autoconfigure.SpringBootApplication;
+	import org.springframework.context.annotation.ComponentScan;
+	import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+
+	@SpringBootApplication
+	@EnableMongoRepositories("com.example.repository")
+	@ComponentScan("com.example.*")
+	public class MongoDbApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MongoDbApplication.class, args);
+	}
+	}
+
+
+
+3.- [Paquete de nuestra interfaz - Repositorio]
+
+Creamos dentro de nuestro MVC la estructura de nuestra interfaz con la cual estaremos haciendo relacion con cada una
+de las funciones con las que el usuario va a interactuar y aquí no se programa nada, solamente se mandan a llamar
+funciones que sean creadas para localizar algun campo o funcion en particular
+
+
+	(NOTA: Inclusive nos ayuda para buscar campos en especifico con valores como AND y OR)
+
+	--------------------------- [com.[X].interface]/[com.[X].repository]
+
+	package com.example.repository;
+
+	import java.util.List;
+
+	import org.springframework.data.mongodb.repository.MongoRepository;
+	import org.springframework.stereotype.Repository;
+
+	import com.example.entity.Student;
+
+	@Repository
+	public interface StudentRepository extends MongoRepository<Student, String> {
+
+	List<Student> findByName(String name);
+
+	Student findByEmailAndName (String email, String name);
+
+	Student findByNameOrEmail (String name, String email);
+
+	List<Student> findByDepartmentDepartmentName(String deptname);
+
+	List<Student> findBySubjectsSubjectName (String subName);
+
+	List<Student> findByEmailIsLike (String email);
+
+	List<Student> findByNameStartsWith (String name);
+	}
+
+
+
+
+4.-[Paquete de nuestro Modelo - Service]
+
+Aqui es donde nosotros hacemos todos los metodos o estructuras con las cuales vamos a estar manejando los datos 
+dentro de nuestra aplicacion para las llamadas REST con nuestra notacion @Service
+
+
+	----------------------- [com.[X].service]
+
+	package com.example.service;
+
+	import java.util.List;
+
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.data.domain.PageRequest;
+	import org.springframework.data.domain.Pageable;
+	import org.springframework.data.domain.Sort;
+	import org.springframework.stereotype.Service;
+
+	import com.example.entity.Student;
+	import com.example.repository.StudentRepository;
+
+	@Service
+	public class StudentService {
+	
+	@Autowired  <---- Es la notacion con la que realizamos la injeccion de dependencias de un objeto a una instancia
+	StudentRepository studentRepository;
+
+	public Student createStudent (Student student) {
+		return studentRepository.save(student);
+	}
+	
+	public Student getStudentbyId(String id) {
+		return studentRepository.findById(id).get();
+	}
+	
+	public List<Student> getAllStudents() {
+		return studentRepository.findAll();
+	}
+	
+	public Student updateStudent (Student student) {
+		return studentRepository.save(student);
+	}
+	
+	public String deleteStudent (String id) {
+		studentRepository.deleteById(id);
+		return "Student has been deleted.";
+	}
+	
+	public List<Student> getStudentsByName (String name) {
+		return studentRepository.findByName(name);
+	}
+	
+	public Student studentsByNameAndMail (String name, String email) {
+		return studentRepository.findByEmailAndName(email, name);
+	}
+	
+	public Student studentsByNameOrMail (String name, String email) {
+		return studentRepository.findByNameOrEmail(name, email);
+	}
+	
+	public List<Student> getAllWithPagination (int pageNo, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+		
+		return studentRepository.findAll(pageable).getContent();
+	}
+	
+	public List<Student> allWithSorting () {
+		Sort sort = Sort.by(Sort.Direction.ASC, "name", "email");
+		
+		return studentRepository.findAll(sort);		
+	}
+	
+	public List<Student> byDepartmentName (String deptName) {
+		return studentRepository.findByDepartmentDepartmentName(deptName);
+	}
+	
+	public List<Student> bySubjectName (String subName) {
+		return studentRepository.findBySubjectsSubjectName(subName);
+	}
+	
+	public List<Student> emailLike (String email) {
+		return studentRepository.findByEmailIsLike(email);
+	}
+	
+	public List<Student> nameStartsWith (String name) {
+		return studentRepository.findByNameStartsWith(name);
+	}
+	}
+
+
+
+
+5.-[Paquete de nuestro controlador - Controller]
+
+Aquí es donde hacemos toda la estructura logica de como se van a manejar los datos que vamos a estar recibiendo en
+nuestro proyecto, el manejo de las notacion @GetMapping, @PostMapping, @PutMapping, @DeleteMapping para el manejo de 
+cada uno de los servicios
+
+
+
+	---------------------- [com.[X].controller]
+
+	package com.example.controller;
+
+	import java.util.List;
+
+	import org.springframework.beans.factory.annotation.Autowired;
+	import org.springframework.web.bind.annotation.DeleteMapping;
+	import org.springframework.web.bind.annotation.GetMapping;
+	import org.springframework.web.bind.annotation.PathVariable;
+	import org.springframework.web.bind.annotation.PostMapping;
+	import org.springframework.web.bind.annotation.PutMapping;
+	import org.springframework.web.bind.annotation.RequestBody;
+	import org.springframework.web.bind.annotation.RequestMapping;
+	import org.springframework.web.bind.annotation.RequestParam;
+	import org.springframework.web.bind.annotation.RestController;
+
+	import com.example.entity.Student;
+	import com.example.service.StudentService;
+
+	@RestController
+	@RequestMapping("/api/student")
+	public class StudentController {
+	
+	@Autowired
+	StudentService studentService;
+
+	@PostMapping("/create")
+	public Student createStudent(@RequestBody Student student) {
+		return studentService.createStudent(student);
+	}
+	
+	@GetMapping("/getById/{id}")
+	public Student getStudentbyId(@PathVariable String id) {
+		return studentService.getStudentbyId(id);
+	}
+	
+	@GetMapping("/all")
+	public List<Student> getAllStudents() {
+		return studentService.getAllStudents();
+	}
+	
+	@PutMapping("/update")
+	public Student updateStudent(@RequestBody Student student) {
+		return studentService.updateStudent(student);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public String deleteStudent(@PathVariable String id) {
+		return studentService.deleteStudent(id);
+	}
+	
+	@GetMapping("/studentsByName/{name}")
+	public List<Student> studentsByName(@PathVariable String name) {
+		return studentService.getStudentsByName(name);
+	}
+	
+	@GetMapping("/studentsByNameAndMail")
+	public Student studentsByNameAndMail(@RequestParam String name,
+			@RequestParam String email) {
+		return studentService.studentsByNameAndMail(name, email);
+	}
+	
+	@GetMapping("/studentsByNameOrMail")
+	public Student studentsByNameOrMail(@RequestParam String name,
+			@RequestParam String email) {
+		return studentService.studentsByNameOrMail(name, email);
+	}
+
+
+	/*Para hacer la prueba en postman para cada estructura de AND u OR tenemos que hacerla despues de un '?' y
+	  agregando cada uno de los campos que deseamos obtener, por ejemplo:
+
+		http://localhost:8080/api/student/studentsByNameOrMail?name=JSON&email=edwinam007@hotmail.com
+
+	(NOTA: Tener en cuenta que cuando vayamos a tener más de un resultado como respuesta de la BD's debemos de
+	almacenar todo en una Lista, no hacer que el retorno sea como un tipo Student sino como una Lista de todos
+	esos valores o recibiras el error [returned non unique result])
+
+	*/
+
+
+	
+	@GetMapping("/allWithPagination")
+	public List<Student> getAllWithPagination(@RequestParam int pageNo,
+			@RequestParam int pageSize) {
+		return studentService.getAllWithPagination(pageNo, pageSize);
+	}
+
+	/*Para hacer la prueba en postman para cada estructura de paginacion tenemos que hacerla despues de un '?' y
+	  agregando cada uno de los campos que deseamos obtener, por ejemplo:
+
+		http://localhost:8080/api/student/allWithPagination?pageNo=1&pageSize=10
+
+	(NOTA: Tener en cuenta que los valores no deben de ser negativos y cada vez que se ponga en el pageSize la
+	cantidad es la cantidad de datos que se mostraran por cada pagina)
+
+	*/
+
+	
+	@GetMapping("/allWithSorting")
+	public List<Student> allWithSorting() {
+		return studentService.allWithSorting();
+	}
+	
+	@GetMapping("/byDepartmentName")
+	public List<Student> byDepartmentName(@RequestParam String deptName) {
+		return studentService.byDepartmentName(deptName);
+	}
+
+	/*Cuando queramos hacer busqueda mediante documentos en vez de solo campos se usa la ruta de del tipo de dato
+	que queramos de ese documento, en este caso nosotros en nuestra Interfaz/Respository vamos a trazar la ruta
+	hacia donde se encuentra ese campo del documento en nuestra BD, ejemplo:
+
+		List<Student> findByDepartmentDepartmentName(String deptname);
+			
+	Aquí el tipo de dato en nuestra entidad Student es Department pero ademas le agregamos el nombre del campo 
+	del documento al que queremos tener acceso, para eso accedemos de la siguiente manera en Postman:
+		
+
+		http://localhost:8080/api/student/byDepartmentName?deptName=Boris
+
+	(NOTA: Tener en cuenta que los nombres del metodo de la interfaz se hace con los nombres de las variables 
+	que se crearon en los entity documents, y la variable que colocaremos en la URL es la que asignamos en el
+	@RequestParam de nuestro Controlador)
+
+	*/
+	
+	
+	@GetMapping("/bySubjectName")
+	public List<Student> bySubjectName(@RequestParam String subName) {
+		return studentService.bySubjectName(subName);
+	}
+	
+
+	/*Cuando queramos hacer busqueda mediante un objeto de documentos en vez de solo campos se usa la ruta de 
+	del tipo de dato que queramos de ese objeto de documentos, en este caso nosotros en nuestra 
+	Interfaz/Respository vamos a trazar la ruta hacia donde se encuentra ese campo del documento en nuestra BD, 
+	ejemplo:
+
+		List<Student> findBySubjectSubjectName(String subname);
+
+	Aquí el tipo de dato en nuestra entidad Student es Subject pero ademas le agregamos el nombre del campo 
+	de los objetos de documento al que queremos tener acceso, accedemos de la siguiente manera en Postman:
+
+		http://localhost:8080/api/student/bySubjectName?subName=C++
+
+	(NOTA: Tener en cuenta que los nombres del metodo de la interfaz se hace con los nombres de las variables 
+	que se crearon en los entity documents, y la variable que colocaremos en la URL es la que asignamos en el
+	@RequestParam de nuestro Controlador)
+
+	*/
+
+	@GetMapping("/emailLike")
+	public List<Student> emailLike(@RequestParam String email) {
+		return studentService.emailLike(email);
+	}
+	
+	@GetMapping("/nameStartsWith")
+	public List<Student> nameStartsWith(@RequestParam String name) {
+		return studentService.nameStartsWith(name);
+	}
+	}
+
+
+
+
+
+
+------------------------------- Pagiantion o Paginacion
+
+Esta es una forma de hacer que cada uno de nuestros resultados se encuentren limitados por una cierta cantidad de 
+resultados y que no nos muestre todos de un solo momento, en caso de tener como resultado 100 datos, hacer que nos
+aparezcan en 4 ventadas de 25 resultados cada uno, para eso nos sirve la paginación, ejemplo
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
