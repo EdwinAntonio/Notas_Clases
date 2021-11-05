@@ -87,6 +87,166 @@ Para hacer la instalacion de MongoDB debemos de seguir los sieguientes pasos:
 
 
 
+---------------------------- Mongo DB para un proyecto SpringBoot
+
+	(NOTA: Cuando nos pida la opcion de elegir si queremos correr un proyecto como Eclipse o como Maven, elegir
+	la opción de Maven)
+		
+spring.data.mongodb.host=ds155313.mlab.com
+spring.data.mongodb.port=55313
+spring.data.mongodb.database=CloudFoundry_hv1dfcci_tgvvmuld
+spring.data.mongodb.username=admin
+spring.data.mongodb.password=admin123
+
+
+	
+Para antes de comenzar a utilizar mongo dentro de nuestro proyecto, debemos de tener en cuenta que en nuestro XML(POM)
+necesitaremos agregar o tener 2 dependencias las cuales son la de spring-boot-starter-web y la de 
+spring-boot-starter-data-mongodb
+
+	<dependency>
+		<groupId>org.springframework.boot</gropuId>
+		<artifactId>spring-boot-starter-web</artifacId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.boot</gropuId>
+		<artifactId>spring-boot-starter-data-mongodb</artifacId>
+	</dependency>
+
+
+
+	------------ Modificacion al archivo propeties
+
+
+	Para la coneccion a la base de datos tenemos que especificar el host y el puerto por donde vamos a estar
+	interactuando con la base de datos y para ello agregamos la siguiente sintaxis:
+
+		spring.data.mongodb.host = localhost <---- O ponemos la IP de nuestra base de datos
+		spring.data.mongodb.port = 27017     <---- Puerto por el cual nos comunicaremos
+		spring.data.mongosb.database = spring <--- El nombre de nuestra base de datos
+
+	
+	
+
+	------------ Creando nuestras Entidades y Repositorios de nuestro proyecto
+
+	1.- Para proveer la instancia de los datos de mongoDB a cada una de nuestras entidades en nuestro proyecto
+	debemos de insertar la notacion @Document en nuestra clase entidad para que de esta manera pueda hacer 
+	relacion con la tabla dentro de nuestra base de datos, se implmenta de la siguiente manera:
+
+		@Document(collection = "student")
+
+	-----------------------------------------------
+	@Document(collection = "student")
+	public class Student {
+
+		@Id
+		private String id;
+
+		private String name;
+		...
+	}
+
+	(NOTA: La notacion @Document solamente se agregara a aquellas colecciones que sean separadas de la BD, si 
+	tenemos colleciones que se relacionen con otra collection, solamente agregaremos esta notacion a la coleccion
+	primaria y no a las colleciones que sean ForeignKey, ver ejemplo del archivo 'MongoDB')
+
+	2.- Una vez conectada nuestra entidad a nuestro documento con su respectiva coleccion, debemos ahora hacer la
+	relacion de los campos de nuestra tabla y asosciarla a cada atributo de nuestra clase entidad, para eso
+	usaremos la notacion @Field, la cual nos ayudara a hacer esta relacion, ejemplo:
+
+		@Field
+	----------------------
+
+	private String name;
+
+	@Field(name = "mail")
+	private String email;
+
+	private Department department;
+
+	private List<Subject> subjects;
+	
+
+	(NOTA: La notacion @Field solo se utiliza en caso de que tengamos atriubutos en nuestra entidad que no se 
+	llamen igual a los campos que tenemos en nuestro Documento de MongoDB, si los atriutos se llaman igual que
+	los campos entonces no es necesario agregar la notacion @Field)
+
+		Ejemplo:
+
+		{_id: 1298f1uhf629uhaw
+			_id
+			name
+			mail	<----- Este nombre del campo es 'mail', mientras que en la entidad tenemos 'email'
+			... }
+		
+		----------------------------
+		
+		@Id
+		private int id;
+		
+		private String name;
+		
+		@Field(name = "mail")
+		private String email;	<---- Aqui usamos @Field ya que el atributo no se llama igual que el campo 
+					      de la DB
+
+
+	(NOTA: Siempre en el ID hay que poner la notacion @ID ya que es la forma en la que diremos que este atributo
+	tendra relacion con un Id unico de cada elemento que agreguemos y que no se vaya a confundir con el ID del
+	documento)
+
+	3.- Creacion de los constructores cuando tengamos mas de un contructor en nuestra clase (Osea que tegamos mas
+	clases relacionadas a nuestra clase principal en donde estemos interactuando con sus datos), para eso 
+	usaremos la notacion @PersistenceConstructor , pero esta notacion es exclusivamente para la clase que esta
+	representando a la coleccion entera y que no tenga alguna relacion con notaciones a las demas clases, pero
+	si tenemos todo relacionado con notaciones entonces podemos hacer caso omiso de esto, ejemplo:
+
+
+		
+		
+
+
+
+	.- Para correr nuestra aplicacion con MongoDB por utlimo debemos de agregar la notacion 
+	@EnableMongoRepositories("[Direccion_del_paquete_repositorio]") en nuestra MainClass o clase principal
+
+
+	@SpringBootApplication
+	@EnableMongoRepositories("com.example.repository")
+	@ComponentScan("com.example.*")
+	public class MongoDbApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MongoDbApplication.class, args);
+	}
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
+
 
 
 
