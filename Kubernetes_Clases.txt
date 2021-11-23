@@ -1,0 +1,235 @@
+Que es un nodo en Kubernetes?
+
+Un nodo es una maquina fisica o virtual en la que esta instalado Kybernetes, es en sí una maquinda de trabajo 
+y ahí es donde kubernetes lanza sus imagenes
+
+Un clustes es un conjunto de nodos asosicados en si mismo, por lo tanto debe tener más de un nodo, de esta manera
+si falla uno de los nodos todavia se pyuede acceder a su aplicación desde otros nodos, ademas tener multiples nodos
+que trabajen a la vez
+
+Un nodo maestro es un nodo instalado por kubernetes que se configura como maestro, el maestro vigila a los nodos
+del clustes y es el encargado de la administración de cada uno de ellos.
+
+
+
+
+-------------------------- COmponentes de Kubernetes
+
+API Server 	- Es el frontend de kubernetes con el cual interactua el usuario
+etcd 		- Es la localización en donde se encuentran todos los datos de cada uno de los nodos
+controllers	- Son los que se encargan de tomar las deciciones en traer nuevos contenedores en tales casos
+Container RT	- Es el software encargado de ejecutar cada uno d elos conteneedores
+kublet		- es el agente que se ejecuta en cada nodo del clúster.
+
+
+---------------------- Tipos de servidores (Master y Workers)
+
+<kube.apiserver> es el encargado de administrar o tner conexión con los nodos esclavos para su trabajo, con 
+<kubelet>
+
+
+
+	------------- Para la instalación de Kubernetes de forma local ver Seccion 3: Demo - Minikube
+	
+	(NOTA: Para la instalacion de mini kubes primero debemos de instalar kubectl y despues mini kubes)
+
+	https://kubernetes.io/docs/tasks/tools/
+
+		1.- https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+	(NOTA: para hacer ejecutable el archivo binario de kubectl usamos el comando: chmod +x ./kubectl)
+		
+		2.- https://minikube.sigs.k8s.io/docs/start/
+
+		Para ejecutar minikube con los drivers de VirtualBox el comando usamos: 
+
+			minikube start --driver=virtualbox 
+
+		Para hacer virtualbox como nuestro driver por default usamos:
+
+			minikube config set driver virtualbox
+
+
+	(NOTA: Correr en diferentes VM ver en https://minikube.sigs.k8s.io/docs/drivers/)
+	(NOTA 2: Para hacer estos pasos ocupas tener instalado VirtualBox en la maquina virtual o en tu PC normal
+		para poder realizar estos pasos)
+
+----------------------- PODS
+
+Un POD es una instancia unica de la plicacion en donde encapsula un objeto pequeño que puedas utilizar con
+kubernetes
+
+Estos PODS pueden encapsular diferentes estancias de imagenes al momento que nosotros corremos imagenes dentro de 
+Docker, pero en vez de estar creando a cada rato nuevas instancias y enlazandolas, hacemos todo esto dentro de un
+POD y cada vez que queramos otra instancia de las mismas imagenes con la misma conexión solo tendremos que ejecutar
+un POD y de esa manera levantara las imagenes requeridas con las configuraciones necesarias en vez de hacer todo 
+desde 0
+
+Para poder crear un POD desde kubernetes debemos de hacer los siguientes pasos
+
+	1.- kubectl run nginx --image nginx (Especificamos la imagen que se alamacenara dentro del POD)
+	2.- kubectl get pods	(Verificamos la lista de PODS que tiene nuestro cluster con sus respectivos nombres)
+	3.- kubectl describe pod [Nombre del POD] (Nos ayuda a obtener una descripción del cluster que tenemos ejecutando)
+
+	(NOTA: usar el comando kubectl get pods -o wide , nos ayuda tambien a tener una descripción más detallada
+		de nuestros PODS donde cada POD tiene una IP propia asignada dentro del cluster de kubernetes)
+
+
+	kubectl run nginx --image=nginx
+
+	---------------------- Conceptos de kubernetes
+
+		https://kubernetes.io/docs/concepts/  (Para aprender más conceptos y codigos de PODS en Kubernetes)
+		https://kubernetes.io/docs/concepts/workloads/pods/
+
+
+		https://github.com/mmumshad/kubernetes-training-answers (Ejercicios)
+
+
+
+-------------------- Archivos YAML:
+
+Un archivo YAML se utiliza para representar datos de configuración y estos existen en 3 tipos de formatos XML, JSON y
+YAML los cuales son utilizados para configurar las propiedades de un proyecto o servidores estos siempre se debe de
+tener mucho cuidado con los espacios ya que de ello depende las caracteristicas de los atributos
+
+
+	Fruits:
+  		- Apple:
+        		Calories: 95
+        		Fat: 0.3
+        		Carbs: 25
+  		- Banana:
+      			Calories: 105
+      			Fat: 0.4
+      			Carbs: 27
+  		- Orange:
+        		Calories: 45
+        		Fat: 0.1
+
+Employee:
+  Name: Jacob
+  Sex: Male
+  Age: 30
+  Title: Systems Engineer
+  Projects:
+    - Automation
+    - Support
+  Payslips:
+    - Month: June 
+      Wage: 4000
+    - Month:    July 
+      Wage: 4500
+    - Month:   August
+      Wage: 4000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

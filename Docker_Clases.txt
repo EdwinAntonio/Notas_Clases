@@ -26,3 +26,85 @@ https://docs.docker.com/engine/install/ubuntu/
 	11.- Ahora para instalar Docker compose seguimos el siguiente link https://docs.docker.com/compose/install/
 
 		Para saber que version de docker-compose tenemos usamos el comando: docker-compose --version
+
+	https://docs.docker.com/engine/install/ubuntu/ para mas información e instalacion rapida ir hasta abajo y
+							seguir los pasos de Install using the convenience script
+							ya que solo son 2 pasos a seguir
+
+
+
+
+
+
+------------------------ Comandos de Docker
+
+	https://geekflare.com/es/docker-commands/
+
+	* systemctl start docker - (corremos docker)
+	* sudo docker version - (Vemos el tipo de version que tenemos de Docker e inclusive si lo tenemos instalado)
+	* sudo docker run docker/whalesay cowsay Hello-World! - (Iniciamos docker con la ballenita diciendo Hola si todo se instalo correctamente)
+	* docker run [Imagen] - (Se utiliza solo 1 vez cuando vamos a correr una imagen)
+	* docker run [Imgane]:[Version] - (Corremos una imagen con su respectiva version ejemplo 'docker run redis:4.0' )
+	* docker ps - (Vemos si una imagen de docker esta corriendo)
+	* docler ps -a - (Con este comando podemos ver los contenedores que se han corrido y los que aun siguen ON)
+	* docker stop [Nombre de la imagen o ID] - (Detiene la imagen que se esta corriendo en Docker)
+	* docker rm [Nombre de la imagen o ID] - (Elimina el contenedor de Docker para no gastar memoria)
+	* docker images - (Nos muestra todas las imagenes que tenemos disponibles para correr en nuestro docker)
+	* docker rmi [Nombre de la imagen o ID] - (Elimina completamente la imagen de nuestro SO)
+	* docker pull [Nombre de la imagen] - (Extrae la imagen que queremos pero no ejecuta el contenedor)
+	* docker exect [Nombre de la imagen] bash - (Entramos a la consola del contenedor que se esta ejecutando ya)
+	* docker exect [Nombre de la imagen] cat /etc/hosts - (Muestra los enlaces Host que tiene la imagen)
+	* docker run -d [Nombre de la imagen] - (Ejecuta el contenedor en 2do plano y nosotros regresamos a la consola de Linux)
+	* docker run -d --name [Nombre del contenedor] [imagen] - (Podemos asignar un nombre especifico a la imagen del contenedor)
+	* docker run -it [Nombre de la imagen] bash - (Mantiene el contenedor abierto y ejecutandose en la terminal) 
+	* docker run -p 80:5000 - (De esta manera puede acceder un usuario externo a nuestra app mendiante el puerto el primer puerto es del usuario y el 2do de nuestra imagen)	
+	* docker inspect [Imagen] - (Nos regresa todos los detalles que tengamos en la imagen especificada en formato JSON)
+	* docker attach [ID container] - (Nos regresa a la consola de ese contenedor)
+
+
+
+	(NOTA: Cuando instalamos una imagen y despues usamos el comando docker ps -a, vemos que la imagen se ejecuto
+	pero se cerro inmediatamente esto se debe a que los contenedores no estan destinados a alojar un SO, estos 
+	solo estan destinados a ejecutar una tarea o proceso especifico, como alojar una instancia de un servidor, un
+	servicio web, una BD, etc... Y una vez que el contenedor completa la tarea éste se sale o cierra el conteiner
+	ya que el contenedor solo dura el tiempo en que se esta ejecutando esa tarea en especifico)
+
+	(NOTA: Para saber que tipo de imagenes puede correr o desea correr con docker vaya al siguiente link y 
+	solamente ponga el comando docker run [Nombre de la imagen] y se comenzara a descargar en nuestro SO
+
+			https://hub.docker.com/search?type=image
+
+	)
+
+	(NOTA: Para cerrar o eliminar varios contenedores a la vez podemos usar el comando docker rm [id] [id] [id]
+	podemos poner los primeros digitos del ID o el nombre de la imagen separadas por espacio y de esa manera 
+	cerramos o eliminamos varias imagenes a la vez)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

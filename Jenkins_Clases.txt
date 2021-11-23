@@ -385,6 +385,20 @@ utilizacion de Jenkins de forma normal en Linux o realizrlo con Docker?
 
 
 
+-------------------------- Implementación de Slack en Jenkins para mensajeria 
+
+Dentro de los plugins de Jenkins tenemos que instalar el Plugin de Slack y una vez que tengamos conectados en salck
+podremos recibir las notificaciones de Jenkins en nuestra cuenta de Slack
+
+
+
+
+
+
+
+
+
+
 
 
 

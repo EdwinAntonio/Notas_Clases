@@ -35,10 +35,21 @@ resueltos hasta la instalación de ciertas herramientas como NPM, NodeJs, VSCode
 
 
 
+-------------------------- Que es React
+
+React es una biblioteca Javascript de código abierto diseñada para crear interfaces de usuario con el objetivo 
+de facilitar el desarrollo de aplicaciones en una sola página.
+
+programación orientada a componentes en el que cada componente es una pieza con la que el usuario puede interactuar. 
+Estas piezas se crean usando una sintaxis llamada JSX permitiendo escribir HTML (y opcionalmente CSS) dentro de 
+objetos JavaScript.
 
 
-
-
+Una de las principales razones para que esto sea posible es el uso del DOM virtual,  React es capaz de generar el 
+DOM de forma dinámica, hace los cambios en una copia en memoria y después la compara con la versión actual del DOM, 
+de esta forma evita renderizar toda la página cada vez que haya cambios, simplemente se aplica dicho cambio al 
+componente que haya sido actualizado, simple y rápido. Esto propicia una mejor experiencia de usuario, además de 
+un rendimiento y una fluidez impresionante.
 
 
 
