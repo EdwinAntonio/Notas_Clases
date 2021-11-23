@@ -60,7 +60,8 @@ https://docs.docker.com/engine/install/ubuntu/
 	* docker run -p 80:5000 - (De esta manera puede acceder un usuario externo a nuestra app mendiante el puerto el primer puerto es del usuario y el 2do de nuestra imagen)	
 	* docker inspect [Imagen] - (Nos regresa todos los detalles que tengamos en la imagen especificada en formato JSON)
 	* docker attach [ID container] - (Nos regresa a la consola de ese contenedor)
-
+	* docker inspect [ID container] - (Nos regresa toda la información del contenedor incluyendo la IP de acceso externo)
+	* docker service create --replicas=100 nodejs (Lo que hace es de que generea un servicio con la cantidad de instancias que especifiquemos de una imagen)
 
 
 	(NOTA: Cuando instalamos una imagen y despues usamos el comando docker ps -a, vemos que la imagen se ejecuto
@@ -80,6 +81,218 @@ https://docs.docker.com/engine/install/ubuntu/
 	podemos poner los primeros digitos del ID o el nombre de la imagen separadas por espacio y de esa manera 
 	cerramos o eliminamos varias imagenes a la vez)
 
+
+	(NOTA: La mejor forma de correr una imagen de docker es de la siguiente manera)
+
+		docker run --name [nombre] -d [imagen]
+
+
+	Si se quiere correr jenkins desde Docker se usa: docker run jenkins/jenkins:lts
+
+	Y para la configuración ahí nos dara la clave para comenzar la configuracion 
+
+	(NOTA: El hacer esto solamente correra la instancia pero una vez que salgamos de docker o lo reiniciemos
+		e incluso si borramos la imagen de docker tendremos que volver a configurar todo, para eso usamos
+		la recomenación que nos dice la pagina de docker la cual es, crear un directorio y que en ese
+		directorio se guarden/carguen las configuraciones que hayamos realizado a nuestra imagen de jenkins
+		y correr la imagen desde ese directorio donde almacenamos los datos YA CODNFIGURADOS)
+
+
+		https://hub.docker.com/_/jenkins (Seccion This will store the workspace in /var/jenkins_home. 
+						  All Jenkins data lives in there - including plugins and configuration. 
+						  You will probably want to make that a persistent volume 
+						  (recommended):)
+
+		Creamos un directorio con: mkdir my-jenkins-data (Puede ser cualquier nombre)
+		y ahora lo ejecutamos con: 
+
+		docker run --name jenkins -p 8080:8080 -v [ruta del directorio creado]:/var/jenkins_home -u root jenkins/jenkins:lts
+
+		docker run -d --name jenkins -p 8080:8080 -v [ruta del directorio creado]:/var/jenkins_home -u root jenkins/jenkins:lts   
+
+
+		Run the command docker ps and look under the PORTS column. Ports on the left(before ->) are published on the host
+
+
+		Run an instance of kodekloud/simple-webapp with a tag blue and map port 8080 on the container to 38282 on the host.
+
+			docker run -d -p 38282:8080 kodekloud/simple-webapp:blue
+
+
+
+
+
+
+
+
+
+--------------------------- Crear nuestra propia imagen para correr en Docker
+
+Para poder correr nuestra propia imagen en docker debemos de realizar los siguientes pasos:
+
+	1.- Hacerlo desde un SO Ubuntu
+	2.- Actualizar el repositorio apt
+	3.- Instalar las dependencias usando apt
+	4.- Instalar las dependencias de nuestra app
+	5.- Copiar los recursos de nuestro codigo a la carpeta /opt
+	6.- Correr el servicio web usando el comando "flask"
+
+
+
+Para esto crearemos un archivo docker "Dockerfile" en donde realizaremos las siguientes instrucciones:
+
+	[INSTRUCTION]  [ARGUMENT]
+
+	FROM Ubuntu
+	RUN apt-get update
+	RUN pip install flask flask-mysql
+	COPY . /opt/source-code
+	ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+
+
+
+Una vez realisado estos pasos solo le decimos a docker que cree la imagen con le siguiente comando:
+
+	docker build . -f Dockerfile -t mmumshad/my-custom-app
+
+	docker build . -f Dockerfile -t [Direccion del directorio]/my-custom-app
+
+
+
+Si queremos publicarlo en Docker hub usamos el comando 
+
+	docker push [Nombre de la imagen] <------
+
+	(NOTA: Para hacer esto hay que tener una cuenta en dockerhub)
+
+	
+
+	------------------------------------------------------------------------------------------------
+
+	------------- Paso 1
+
+	Entramos a nuestor imagen de un SO desde Docker, en este caso Ubuntu
+
+	docker run -it ubuntu bash
+
+	
+	------------- Paso 2
+
+	Instalamos las dependencias necesarias para que corra el proyecto
+	
+	(NOTA: Siempre actualizar el patque apt con el comando: apt-get update)
+
+	apt-get install -y python
+
+	
+	-------------- Paso 3
+
+	Instalamos pip para nuestra aplicación y flask para hacerlo imagen
+
+	apt-get install python-pip
+
+	pip install flask	
+
+
+	-------------- Paso 4
+
+	Nos vamos al la carpeta /opt y agregamos nuestro codigo
+
+	cat -> /opt/app.py 
+
+	Una vez dentro copiamos nuestro código
+
+	Y lo ejecutamos con el comando siguiente (Hay que estar dentro de la carpeta del proyecto para ejecutar)
+
+	FLASK_APP=app.py flask run --host=0.0.0.0
+
+
+
+	-------------- En nuestro SO original vamos a la carpeta donde esta todo el archivo
+	
+	Una vez dentro vamos a crear un Dockfile para dar las instrucciones de todo lo que tuvimos que hacer para que
+	nuestra aplicacion corriera sin problemas, para tener una idea de lo que hicimos podemos usar el comando
+	"history" en nuestra terminal para ver todos los pasos realizados para que se pudiera ejecutar
+
+	Para crear el Dockfile dentro de nuestra aplicación usamos el comando:
+
+		cat > Dockerfile
+
+	Aqui creamos todas las intrucciones para que Docker pueda crear la imagen del proyecto:
+		
+		FROM Ubuntu
+		RUN apt-get update
+		RUN pip install flask flask-mysql
+		COPY . /opt/source-code
+		ENTRYPOINT FLASK_APP=/opt/source-code/app.py flask run
+	
+	Para salir solo damos Ctrl+C 
+
+	Ahora dentro del archivo que especifcamos vamos a ingresar todas las lineas de codigo de nuestr proyecto importamos
+
+		cat > app.py
+
+	from flask import Flask
+	app = Flask(__name__)
+
+	@app.route("/")
+	def main():
+    		return "Welcome!"
+
+	@app.route('/how are you')
+	def hello():
+    		return 'I am good, how about you?'
+
+	if __name__ == "__main__":
+    		app.run(host="0.0.0.0", port=8080)
+
+
+
+
+
+
+--------------- Variables de entorno dentro de nuestra imagen de Docker con os.environ.get('[NOMBRE DE LA VARIBALE]')
+
+	Ejemplo:
+
+	color = os.environ.get('APP_COLOR')
+
+	
+	Al momento de correr la imagen en linea de comando podemos hacer lo siguiente
+
+	docker run [nombre de la app] -e APP_COLOR=blue
+
+	docker run simple-webapp -e APP_COLOR=red
+
+
+	Para saber que atributos o variables tiene una imagen usamos el comando:
+
+		docker inspect [nombre de la imagen]
+
+	En el desgloce nos mostrara todas aquellas variables dentro de un formato JSON
+
+
+
+
+
+
+
+
+---------------------------- Conectividad de contenedores en la red
+
+
+Para crear una diferente conexión de redes podemos configurarla con el siguiente comando
+
+
+	docker network create \
+		-- driver bridge \
+		-- subnet 182.18.0.0/16
+		custom-isolated-network
+
+
+	(NOTA: Para conectarse a un contenedor no es muy recomendable usar su IP ya que nada asegura que una vez que
+		se reinicie el contenedor vaya a tener la misma IP, por tal motivo es recomendable que al momento de
+		conectarnos lo hagamos mediante su Nombre ya que ese es un ID unico dentro de Docker)
 
 
 
