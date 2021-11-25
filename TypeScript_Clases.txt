@@ -1,0 +1,948 @@
+
+
+Para la instalación de TypeScript primero debemos de tener instalado Nodejs
+para eso vamos a realizar los siguientes pasos
+
+--------------- Instalamos primero NPM
+	
+	sudo apt update
+	sudo apt install npm
+
+--------------- Instalamos la version de Nodejs (Version LTS)
+
+	sudo apt install wget
+	wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+
+	El siguiente paso es permitir que NVM se use desde el perfil de bash de tu usuario ejecutando 
+	este comando:
+	
+	source ~/.profile
+	
+	Ahora, puedes usar NVM para mostrar todas las versiones de Node.js disponibles para instalar.
+
+	nvm ls-remote
+
+	Elige libremente el que quieras. Para mayor estabilidad y soporte recomendamos la versión 
+	16.13.0. Para hacerlo, ejecuta este comando:
+
+	nvm install 10.15.1
+
+
+
+Una vez tegnamos todo instalado instalamos TypeScript con el siguiente comando:
+
+	sudo npm install -g typescript
+
+
+Una vez instalado dentro de nuestra terminal en Visual Studio Code podemos irnos a la direccion del archivo donde
+estamos creando un archivo ts y simplemente lo ejecutamos dando el comando en terminal:
+
+	tsc [nombre del archivo a compilar]
+
+	
+
+	(NOTA: Para tener un mejor apoyo al momento de programar te recomiendo descargar las siguientes extensiones
+		a VSC: ESLint - Material Icon Theme - Path Intellisense - Prettier Code Formater) 
+
+	Ctrl + Shift + I  <-------- Nos salvara la vida
+	Ctrl + Space <------- Para sacar las opciones de una accion
+
+
+
+
+
+------------------------- Hacer que un proyecto se actualice en tiempo real
+
+En la carpeta de nuestro proyecto corremos los siguientes comandos:
+
+	npm init 	<------ En esta parte solo damos Enter, enter, enter, hasta verificar que todo este bien
+	npm intall --save-dev lite-server
+
+Una vez instalado los paquetes nos vamos al "Package.json" y nos vamos a la seccion de Script y agregamos la
+siguiente linea de codigo 
+
+	 "scripts": {
+    		"test": "echo \"Error: no test specified\" && exit 1",
+    		"start": "lite-server" <----- Agregamos esto
+  	},
+
+Y para ejecturalo solo damos la siguiente linea de comando
+
+	npm start
+
+
+	(NOTA: En caso de subir archivo a un repositorio, podemos eliminar la carpeta de node_modules ya que 
+		pesa demasiado y no interfiere con el funcionamiento de la app, solo cuando descarguemos el proyecto
+		recordemos de usar el comando: npm intall --save-dev lite-server para que haga la instalacion de node
+		en el proyecto y podamos ejecutarlo en tiempo real)
+
+	(NOTA: Mientras tengamos el npm start corriendo, podemos abrir una nueva ventana de Terminal y seguir
+		programando con ella mientras que la primera ejecuta el proyecto en tiempo real)
+
+
+
+
+
+
+
+-------------------------- Core Types
+
+	Number		1,5.3,-10		No hay diferencia entre enteros y flotantes, los toma por igual
+	String		'Hi',"Hi",`Hi`		Acepta todos estos valores
+	Boolean		true, false		Solo toma esos 2 valores pero no "truthy" o "falsy"
+	Object		{age: 30}		Cualquier tipo de objeto en JavaScript
+	Array		[1,2,3]			Cualquier tipo de Array en JavaScript
+	Tuple		[1,2]			Arreglo bajo condiciones especificas
+	Enum		enum {NEW, OLD}		Asigna un valor de forma global en el código
+	Any		*			Asigna cualquier valor
+
+
+Por tal motivo tenemos el siguiente ejemplo, la gran herramienta de TypeScript es que mientras nosotros tengamos en
+desarrollo una aplicacion puede ser que el usuario ingrese un texto donde deberia de ir un number, así que para 
+evitar que haya un error, nosotros podemos obligar a la function que recibe ese parametro que sea exclusivamente un
+tipo de dato, ejemplo:
+
+	function add(n1,n2){  <---- Aqui no sabe que tipo de dato entrara
+	    return n1+n2;
+	}
+
+
+	function add(n1: number,n2: number){  <---- Asi especificamos forzosamente de que tipo de dato sera
+    		return n1+n2;
+	}
+
+
+	(NOTA: Esto nos ayuda que al momento de compilar el programa nos pueda indicar cual puede ser el error
+		de forma más facil, ya que TypeScript solo ayuda en la fase de COMPILACION)
+
+La diferencia entre TypeScript y JavaScript es que JavaScript usa tipos de datos Dinamicos (resueltos en tiempo de
+EJECUCIÓN) mientras que TypeScript usa tipos de datos Estaticos y este los corrige en face de COMPILACION
+
+	The core primitive types in TypeScript are all lowercase!
+
+
+
+
+
+----------------------- typeOf
+
+El tipo de dato typeOf nos ayuda a identificar que tipo de dato es un valor ingresado, ejemplo
+
+	 function add(n1,n2){
+	    console.log(typeOf n1)  <---- Salida: number  
+	    return n1+n2;
+	}
+
+		
+	if(typeof n1 !== "number" || typeof n2 === "string"){
+        	throw new Error("Tipos de datos incorretos! :c")
+    	}
+
+
+
+------------------------ Tipos de datos concadenados
+
+Hay que tener mucho cuidado con los tipos de datos que estan concadenados, ya que si hay un solo String dentro de 
+la concadenación todo se convertira en String ya que son los valores que más usa TypeScript (String y Boolean)
+un ejemplo sería el siguiente:
+
+
+function add(n1: number,n2: number, showValue: boolean, phrase: string){
+    if(showValue){
+        console.log(phrase + n1 + n2) <---- Salida: Resultado es: 55.8
+    }else{
+        return n1+n2;
+    }
+}
+
+const number1 = 5;
+const number2 = 5.8;
+const resultValue = true;
+const phrase = "Resultado es: "
+const result = add(number1,number2, resultValue, phrase);
+
+	----------------La solución sería
+
+function add(n1: number,n2: number, showValue: boolean, phrase: string){
+	const result = n1 + n2 <--- Realizar las operaciones antes de mandar a mostrar
+    	if(showValue){
+        	console.log(phrase + result) <---- Salida: Resultado es: 10.8
+    	}else{
+        	return n1+n2;
+    	}
+}
+
+
+
+
+
+--------------------- Tipos de injerencia y de Asignación
+
+Los tipos de datos mas comunes que vamos a utilizar es const y let, donde const es utilizado para valores de
+constantes y el let para variables
+
+	let number1: number = 5; <---- Esta NO es una buena practica ya que el valor puede cambiar al estar instnaciado
+	
+	let number2: number; <-------- Esta SI es una buena practica porque desde el incio le asignamos que cualquier
+					valor que reciba sera de tipo numero y no esta instanciada con un valor
+
+
+
+
+--------------------- Crear objetos en TypeScript
+
+La creación de objetos es similar a JavaScript solo que antes de crear el objeto tenemos que definir primero la 
+estructura del objeto así que para generar una estructura en TypeScript se hace de la siguiente manera:
+
+	(NOTA: Todo esto se debe a que los types de objetos y las asignaciones no son parte de JavaScript, solo son
+		de TypeScript)
+
+const product: {
+  id: string;
+  price: number;
+  tags: string[];
+  details: {
+    title: string;
+    description: string;
+  }
+}
+
+
+const product: {
+  id: string;
+  price: number;
+  tags: string[];
+  details: {
+    title: string;
+    description: string;
+  }
+} = {
+  id: 'abc1',
+  price: 12.99,
+  tags: ['great-offer', 'hot-and-new'],
+  details: {
+    title: 'Red Carpet',
+    description: 'A great carpet - almost brand-new!'
+  }
+}
+
+console.log(product.id)
+
+ 
+
+const product = {
+  id: 'abc1',
+  price: 12.99,
+  tags: ['great-offer', 'hot-and-new'],
+  details: {
+    title: 'Red Carpet',
+    description: 'A great carpet - almost brand-new!'
+  }
+}
+
+
+	Donde el tipo de objeto para este ejemplo sería
+
+{
+  id: string;
+  price: number;
+  tags: string[];
+  details: {
+    title: string;
+    description: string;
+  }
+}
+
+
+
+
+-------------------------- Arrays y uso del any en arrays
+
+Cuando nosotros queramos crear un arreglo simplemente tenemos que mandarlo a declarar con el tipo de dato que vamos
+a almacenar, ejemplo
+
+	let arrayTest: string[]
+
+	arrayTest = ["Hola","Mundo"]
+
+
+En caso de que nosotros queramos almacenar datos de diferentes tipos de datos entonces ahí es cuando usamos a 'any'
+el cual le va a indicar al compilador de TypeScript que lo que se va a almacenar dentro del array es de varios tipos
+
+	let arrayTest: any[]
+
+	arrayTest = ["Hola mundo",1]
+
+
+Para acceder a cada uno de los campos dentro de un arreglo se puede hacer mediante un recorrido con un For o un While
+ya dependela necesidad y se realiza de la siguiente manera:
+
+const product = {
+  id: 'abc1',
+  price: 12.99,
+  tags: ['great-offer', 'hot-and-new'],
+  details: {
+    title: 'Red Carpet',
+    description: 'A great carpet - almost brand-new!'
+  }
+}
+
+	for(const product of product.tags){
+	  console.log(product)
+	}
+
+
+
+
+----------------------- Tuplas
+
+Las tuplas son arreglos que ya esta definidos y los cuales sus datos son inmutables, osea que no cambia su valor
+para la creacion de estas tuplas se hace de la siguiente manera:
+
+
+const product = {
+  id: string;
+  price: number;
+  tags: [string, string]; <---- De esta manera nosotros indicamos que sera una Tupla de caracterisitcas muy especificas
+  details: {			osea que solo tendra 2 campos los cuales almacenara strings en cada uno de esos camps
+    title: string;
+    description: string;
+  }
+}
+
+
+
+	En caso de que al almacenar valores no sigue la regla de la estrucuta de la Tupla, nos marcara error
+	ejemplo:
+
+
+	product.tags = [1,"Hola"] <---- Error
+	product.tags = ["Hola", "Mundo"] <---- Bien
+	product.tags = ["Hola", "Mundo", "X2"] <---- Error (Se pasa del rango de campos ya que solo es de 2 en el ejm)	
+
+
+
+
+
+---------------------- Enums
+
+Los enums son identificadores que se utilizan para constantes globales las cuales son agregadas de forma automatica
+por TypeScript pero que e igual manera podemos manejarlas de la siguiente manera:
+
+	enum Role { ADMIN, READ_ONLY, AUTHOR }  <---- Cuando vayamos a usar un enum siempre la primer letra en Mayus
+						      ya todo en lo demas se usa en mayusculas, esto hace globar la
+						      variable Role
+	const person  = {
+		name: "Edwin",
+		age: 26,
+		hobbies: ["Videogames","Sports"],
+		role: Role.ADMIN
+	}
+
+
+	if(person.role === Role.ADMIN){
+		console.log("Is an admin")
+	}
+
+
+
+	(NOTA: A los valores de un enum tambien se le pueden asignar valores para que no nada más sean los valores de
+		0 , 1, 2, etc.. Como siempre se hacen por default, se pueden asignar de la siguiente manera)
+
+		  {	0    ,       1	       ,      2      } <--- Valores normales de casillas
+	enum Role { ADMIN = 5, READ_ONLY = 100 , AUTHOR = 20 } <--- Nuevos valores de casillas
+
+
+
+
+
+
+------------------- Union de Tipos de Datos
+
+Cuando queramos hacer que los parametros de una funcion puedan ser flexibles y no solamente de un tipo de dato
+podemos realizar los siguientes configuraciones
+
+
+function add(n1: number,n2: number){
+    const values = n1 + n2;
+    return n1+n2;
+}
+
+	
+	--------- Como hacerlo flexible
+
+
+function add(n1: number | string , n2: number | String){ <------ Podemos asignarle un | para decir que puede recibir
+    const values = n1 + n2;					 otro tipo de dato tambien, cuantas veces queramos
+    return n1+n2;
+}
+
+
+	--------- Pero para hacerlo que funcione tenemos que validar cada resultado que pueda entrar, de la siguiente
+		  manera
+
+
+
+function add(n1: number | string , n2: number | String){ 
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;
+	}else{
+		values = n1.toString() + n2.toString();
+	}					
+    return values;
+}
+
+	const combine = add(20,30)
+	console.log(combine);
+
+	const combineName = add("Edwin ","Antonio")
+	console.log(combineName)
+
+
+
+
+
+
+-------------------------- Conversion de tipos de datos
+
+Cuando tengamos ciertos tipos de valores, podemos forzarlos a que estos puedan convertir tus datos a un tipo de dato
+en especifico y para eso se puedne realizar de multiples maneras, como en el siguiente ejemplo:
+
+
+	
+function add(n1: number | string , n2: number | String){ 
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;  <-------- Si la conversion con + se hace aquí convertira cada valor en el tpo de dato
+	}else{
+		values = n1.toString() + n2.toString();
+	}					
+    return values;
+
+    // return +values   <------ usamos el + al inicio para decir que el valor de retorno sera un number
+    // return values.toString() <-------- Usamos toString() para convertir a String
+    // return parseFloat(value) <-------- Usamos el parseInt(), parseFloat(), etc.. para convertir tambien
+
+}
+
+	const combine = add("20","30")
+	console.log(combine); 
+
+    // return +values   <------ Salida: 2030 (number)
+    // return values.toString() <-------- Salida: "2030" (String)
+    // return parseFloat(value) <-------- Salida: 2030.0 (number)
+
+
+
+
+
+
+
+------------------------ Contruir tu propio Tipo de Dato (type)
+
+Cuando tenemos algunos parametros con muchos tipos de datos para ser flexible es un poco enredoso tener que asignar
+en cada parametro los tipos de datos que acepta, así que para mejorar tiempo podemos crear nuestro propio tipo de dato
+de la siguiente manera
+
+	type Varios = number | string | boolean;  <--------- Los nombres de la variable siempre comienza en Mayusc
+	
+
+function add(n1: Varios, n2: Varios){ 
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;  
+	}else{
+		values = n1.toString() + n2.toString();
+	}					
+    return values;
+
+    // return +values   <------ usamos el + al inicio para decir que el valor de retorno sera un number
+    // return values.toString() <-------- Usamos toString() para convertir a String
+    // return parseFloat(value) <-------- Usamos el parseInt(), parseFloat(), etc.. para convertir tambien
+
+}
+
+
+	--------------------- Otros tipos de ejemplos:
+
+		type User = { name: string; age: number };
+		const u1: User = { name: 'Max', age: 30 }; // this works!
+
+
+	For example, you can simplify this code:
+
+		function greet(user: { name: string; age: number }) {
+  			console.log('Hi, I am ' + user.name);
+		}
+ 
+		function isOlder(user: { name: string; age: number }, checkAge: number) {
+  			return checkAge > user.age;
+		}
+
+
+	To this:
+
+		type User = { name: string; age: number };
+ 
+		function greet(user: User) {
+  			console.log('Hi, I am ' + user.name);
+		}
+ 
+		function isOlder(user: User, checkAge: number) {
+  			return checkAge > user.age;
+		}
+
+
+	O tambien podemos declarar de la siguiente manera:
+
+	type User = { name: string } | string;  <----- Esto es valido
+	let u1: User = {name: 'Max'};
+	u1 = 'Michael';
+
+
+
+
+
+
+
+------------------------------ Retornos de funciones
+
+Mientras nosotros dentro de la funcion no asignemos un return, la funcion se declara como VOID pero si asignamos un
+return entonces la función se considera que retornara el tipo de dato especifico, por ejemplo:
+
+
+function add(n1: Varios, n2: Varios): number {  <----- Así podemos decir el tipo de retorno que hará, pero TS ya lo
+							hace por nosotros automaticamente así que preferiblemente no
+							realizar esta acción 
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;  
+	}else{
+		values = n1.toString() + n2.toString();
+	}					
+    return values;
+}
+
+	let values1: undefined; <---- Es usado para decir que esta variable aún no ha sido definida
+
+
+
+
+
+
+
+--------------------------------- Function como Types
+
+Dentro de una variable podemos almacenar un puntero de una función y mandarlo a llamar con la nueva asignación
+ejemplo:
+
+	
+function add(n1: Varios, n2: Varios){
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;  
+	}else{
+		values = n1.toString() + n2.toString();
+	}					
+    return values;
+}
+
+   let valuesAdd = add;
+   //let valuesAdd: Function; <---- De esta manera decimos que la variable solo podra usar funciones como puntero
+
+   console.log(valuesAdd(8,8)) <------ Asignamos un puntero a nuesta función add 
+
+
+
+
+	------------------------- Uso de un arrow
+
+	De esta manera nosotros podemos decir que una variable va a tomar el puntero de una función que no tiene
+	parametros y que al final retornara un tipo de dato.
+
+	Un arrow nos ayuda mucho a definir el tipo de funciones que podemos usar como punteros y ayudar a que TS no
+	se confunda al momento de asignar otra funcion que no coincida con las reglas de la Arrow, la arrow en si son
+	como reglas para usar punteros en funciones
+
+
+	let values: () => number;  	let [nombre]: ([parametros]) => [tipo de dato a retornar];
+
+
+
+	De esta manera nosotros podemos decir que una variable va a tomar el puntero de una función que tiene 2
+	parametros y que al final retornara un tipo de dato
+
+
+	let values: (a: number, b: number) => number;  	let [nombre]: ([parametros]) => [tipo de dato a retornar];
+	values = add;
+
+
+
+
+
+---------------------------- Usar funciones dentro de una funcion
+
+
+Cuando queramos usar una funcion dentro de otra función podemos mandarlas a llamar con un arrow, los cuales nos ayudan
+tambien a ser como parametros que pueden recibir un valor en concreto, ejemplo:
+
+	(NOTA: Los Function Types definen los parametros y con la arrow retornamos el tipo de una función especifica)
+
+type Varios = number | string | boolean;
+
+function add(n1: Varios, n2: Varios, cb(n3: number) => void){
+    let values;
+	if(typeof n1 === "number" && typeof n2 === "number"){
+		values = n1 + n2;  
+	}else{
+		values = n1.toString() + n2.toString();
+	}	
+    cb(values);
+}
+
+	add(10,20, (result) => {
+		console.log(result);	<---- Salida: 30 (number)
+	});
+
+
+	Callback functions can return something, even if the argument on which they're passed does NOT expect a 
+	returned value.
+
+	---------- Esto es correcto
+
+function sendRequest(data: string, cb: (response: any) => void) {
+  // ... sending a request with "data"
+  return cb({data: 'Hi there!'});
+}
+ 
+sendRequest('Send this!', (response) => { 
+  console.log(response);
+  return true;
+ });
+
+
+
+
+
+
+------------------------- Type unknown
+
+La diferencia entre un tipo de dato unkown y un tipo de dato any es que con el unkown al no saber que tipo de dato
+puede almacenar la variable, no puede concadenarse con otras variables ya que el valor no lo sabemos y si cambiamos
+a any, estamos diciendo que cualquier valor va a ser asginado a la variable y esta podría concadenarse con otras ya
+que cumple con la regla de tener o concatenar "CUALQUIER" tipo de valor, ejemplo
+
+let userName: unknown;
+let userAddress: string;
+
+userName = 5;
+userName = "max";
+userAddress = userName;  <------- Error
+
+
+	--------------------
+
+let userName: any;  <------ Cambiamos a any
+let userAddress: string;
+
+userName = 5;
+userName = "max";
+userAddress = userName;  <------- Correcto
+
+
+
+
+
+------------------------- Como compilar el proyecto completo
+
+Para no tener que estar usando a cada rato un archivo para compilar de TS a JS, lo mas recomendable es que en la
+carpeta donde tenemos el proyecto le digamos a NODE que ejectue el proyecto completo y que él sea el encargado de
+buscar el archivo que compile y ejecute el proyecto, para eso nos vamos a la carpeta donde esta el proyecto y 
+ejecutamos la siguiente linea de comando:
+
+	tsc --init
+
+
+Una vez que nos descargue el archivo JSON solamente tenemos que darle una vez a la linea de comando
+
+	tsc
+
+en vez de hacer tsc app.ts, de esta manera el proyecto se compila por si solo y si queremos que todo se ejecute rapid
+podemos usar el comando 
+
+	tsc -w	 <------- Activa el modo show para que todo lo que escribamos se compile en el momento en el TS
+
+
+
+
+
+--------------------------- Excluir archivos de ejecución durante la compilación del proyecto
+
+Para excluir algunos archivos durante la fase de compilacion podemos hacerlo yendonos al archivo tsconfig.log y 
+en la sección de abajo ponemos una , y entonces agregamos el valor "exclude": [] y dentro del arreglo agregamos
+los nombres dde los archivos que queramos excluir, ejemplo:
+
+	"exclude": [
+		"app.js",
+		"analitics.js"
+		"*.dev.ts" //<---- El * indica que va a tomar cualqueir archivo con extension dev y ts
+	]
+
+
+
+
+-------------------- Compatibilidad de es6
+
+Esta tabla nos ayuda a que podamos identificar que tipo de recursos podmeos utilizar al momento de estar trabajando
+con TS y en que versiones o tipos de browsers se puede utilizar ciertos tipos de recursos
+
+	Tabla:
+
+	https://kangax.github.io/compat-table/es6/
+
+
+
+
+
+------------------------ (...) para unir atributos a un arreglo
+
+Cuando queramos agregar 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
