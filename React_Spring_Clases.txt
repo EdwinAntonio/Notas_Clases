@@ -1293,6 +1293,50 @@ spring.data.jpa.repositories.bootstrap-mode=default
 
 
 
+--------------------------- Arrows dentro de REACT
+
+Cuando utilizamos un arrow es solamente una forma distinta de generar una nueva función, aunque la función hecha por
+un arrow nos ayuda mucho a evitar la palabra reservada "this" en muchos aspectos, ejemplo:
+
+	function putMyName(name){
+	  console.log(name)
+	}
+
+		-----------
+
+	const putMyName = (name) => {
+	  console.log(name)
+	}
+
+	const putMyName = (number) => {
+	  return number * 2;
+	}
+
+	const putMyName = (number) => number * 2;  //<--- Cuando hacemos esta sintaxis no es necesario poner return
+
+		-----------
+
+	const putMyName = name => {   //<--- Podemos quitar los parentesis si la función tiene unicamente 1 parametro
+	  console.log(name)
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 

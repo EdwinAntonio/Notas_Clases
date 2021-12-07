@@ -96,6 +96,8 @@ Y para ejecturalo solo damos la siguiente linea de comando
 	Enum		enum {NEW, OLD}		Asigna un valor de forma global en el código
 	Any		*			Asigna cualquier valor
 
+	NOTA: PARA PODER USAR TODO LO QUE SE VE EN OBJETOS Y ARRAYS ES RECOMENDABLE USAR LA VERSION (ES6) 
+	para TYPESCRIPT ya que en la version ES5 no son compatibles, todo esto en el archivo tsconfig.json
 
 Por tal motivo tenemos el siguiente ejemplo, la gran herramienta de TypeScript es que mientras nosotros tengamos en
 desarrollo una aplicacion puede ser que el usuario ingrese un texto donde deberia de ir un number, así que para 
@@ -705,9 +707,327 @@ con TS y en que versiones o tipos de browsers se puede utilizar ciertos tipos de
 
 
 
------------------------- (...) para unir atributos a un arreglo
+------------------------ (...) para unir atributos a un arreglo 
 
-Cuando queramos agregar 
+	NOTA: PARA PODER USAR TODO ESTO ES RECOMENDABLE USAR LA VERSION (es6) para TYPESCRIPT
+
+Cuando queramos agregar los atributos o datos de un arreglo a otro se puede hacer de 2 maneras, mediante un push o
+usar una primitiva para enlazar ambos arrays, ejemplo
+
+	conts aray1 = ["Hobbies","Sports"];
+	const aray2 = ["Edwin"];
+
+	aray2.push(...aray1);
+
+	Más ejemplos en los siguientes enlaces:
+
+	https://academind.com/tutorials/reference-vs-primitive-values
+
+
+
+
+
+
+-------------------------- Punteros a un objeto
+
+Cuando realizamos las siguientes operaciones nosotros no estamos instanciando un objeto a una variable, lo que hacemo
+es asignar un PUNTERO que hace referencia a ese objeto para poder tomar los atributos del objeto, ejemplo;
+
+		
+	const person ={
+		name: "Edwin",
+		age: 26
+	}
+
+
+	const copiaPerson = person;  <----- Así es como asignamor un puntero a un objeto
+
+	const copiaPerson = {...person};  <---- Así copiamos lo que tiene un objeto a otra variable
+
+
+
+
+---------------------- Como parametrizar una función con flecha (Rest Parameters TS)
+
+Cuando tengamos una funcion a la que queramos darle una cantidad flexible de parametros (Osea que pueda aceptar tantos
+parametros como el usuario ingrese), también podemos usar los ... para que pueda aceptar todos los parametros que 
+queremos y no tener que estar especificando uno en concreto, ejemplo:
+
+
+	const add = (number) => {
+
+	}
+
+
+	const addNumber = add(4,8.5); <---- Error ya que solo acepta 1 valor como entrada 
+	console.log(addNumber);
+
+		----------------------------------------
+
+	const add = (number,number) => {
+
+	}
+
+
+	const addNumber = add(4,5,8.5); <---- Error ya que solo acepta 2 valores como entrada 
+	console.log(addNumber);
+
+
+		    ( Nomb_Var : Array_num)
+	const add = (...numbers: number[]) => {  <---- Aquí indicamos que obtendremos un arreglo de tipo number como parametros
+		return numbers.reduce((curResult,curValue) =>{
+			return curResult + curValue;
+		}, 0) <--- El 0 es desde que casilla comenzara a contar los numeros
+	}
+
+
+	const addNumber = add(4,5,7,8.5); <---- Correcto
+	console.log(addNumber);
+
+
+
+
+
+-------------------- Destructurar un array o un objeto
+
+Destructurar un array o un objeto es la forma en la cual nosotros podemos asignar nuevos valores a cada uno de los
+campos que se encuentran dentro de un array e inclusive cambiar el nombre de algun atributo dentro de un objeto.
+
+	(NOTA: Los elementos de una destructuracion de un array, se extraen en orden ya que un array es
+		una lista ordenada de datos, pero si se trata de objetos podemos extraer los datos por el nombre
+		de cada atributo)
+
+
+	Ejemplo:
+
+	1.-[Array]
+	
+	hobbies = ["Sports","Movies"]
+	hobby1 = hobbies[0]
+	hobby2 = hobbies[1]
+	
+	const [hobby1, hobby2] = hobbies; <---  Aquí el arreglo hobbies sobreescribe los datos de la casilla 0 y 1
+						por los valores que contenga Hobby 1 y Hobby 2
+
+	console.log(hobbies, hobby1, hobby2); <---- Salida: ["Sports","Movies"], "Sports", "Movies"
+	
+
+	2.-[Objetos]
+
+	const person ={
+		name: "Edwin",
+		age: 26
+	}
+
+	const { name: firstName, age } = person;  <---- De esta forma cambiamos el nombre del atributo a un objeto
+
+	console.log(firstName, age); 
+
+
+
+
+
+-------------------------- Creando clases
+
+How can you shorten the following code in the best possible way?
+
+class Product {
+  title: string;
+  price: number;
+  private isListed: boolean;
+ 
+  constructor(name: string, pr: number) {
+    this.title = name;
+    this.price = pr;
+    this.isListed = true;
+  }
+}
+
+
+Answer
+
+class Product{
+ private isListed: boolean;
+ constructor(public title: string, public price: number){
+	this.isListed = true;
+}
+}
+
+
+
+
+	----------------------- Que es una clase abstracta
+
+Es aquella clase que no puede ser instanciada pero que tiene que ser una subclase de la main class
+
+
+	Diferencia entre Implements y Extends
+
+	Implements: Solamente se usa cuando vas a utilizar los elementos de alguna interfaz en una clase
+
+	Extends: Se usa para heredar de una clase a otra
+
+
+
+
+	------------------------- Que es una interfaz
+
+Es quella que nos permite definir la estructura de un objeto que podemos utilizar para verificar a todos los objetos
+que puedan tener esa estructura.
+
+La diferencia entre un type para la creación de un objeto y una interfaz es que:
+
+	Interfaces: Las interfaces solo se pueden usar para describir la estructura de un objeto y listo
+
+	Type: Que puede ser un poco más flexible al momento de agregar datos a los atributos a un objeto
+
+
+La diferencia entre una interfaz y una clase abstracta es que una interfaz no tiene detalles de implementación
+mientras que una clase abstracta puede ser una mezcla entre implementaciones concretas y que puede sobreescribir
+algunas funciones.
+
+
+En una interfaz se puede extender tanto como nosotros queramos y siempre donde estemos utilizando un implements debe
+de tener las mismas caracteristicas dentro de la clase a la que mandamos a llamar la interfaz, ejemplo
+
+
+	interface Named {
+		name: string;
+	}
+
+	interface Gradle extends Named{ //<---- 	Si queremos implementar mas interfaces solo ponemos ',' y el nombre de otra interfaz 
+					//		interface Gradle extends Named, Named2, Named3, ...
+		greet(phrase: string): void;
+	}	
+
+	class Person implements Gradle{
+	// name: "Edwin";   <------ Error porque no tienes todos los atributos de la interfaz utilizados
+	age: 30;
+
+	contructor(n: string){
+		this.name = n
+	}
+
+	greet(phrase: string){  //<------- Correcto porque estas utilizando los metodos de la interfaz Gradle
+
+	}
+	}
+
+
+
+
+
+
+------------------------- Interfaces como estructuras de Funciones
+
+Una interfaz describe objetos (or tipos de funciones) pero no puede almacenar o describir tipos arbitrarios como
+tipos de uniones
+
+Cuando creamos una interfaz podemos realizar funciones anonimas lsa cuales nos dan la estructura de una función 
+al momento que mandamos llamar la interfaz peeero, sin agregar un nombre a la funcion, es como un truco para generar
+funciones dentro de una interfaz, ejemplo:
+
+	interface addFn{
+	  (a: number, b: number): number;  // <------ Así se crea una funcion anonima en una interfaz
+	}
+
+	let add: addFn;
+
+	add(n1: number, n2: number) => {
+		return n1 + n2;
+	} 
+
+
+
+
+----------------------------- Construir cosas Genericas en TS
+
+	------------ Premisas
+
+	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+
+
+
+
+
+----------------------------- Crear una app de React con TS
+
+Para crear una app de React junto a TS se usa el siguiente comando
+
+
+	create-react-app . --typescript
+
+
+	https://create-react-app.dev/docs/adding-typescript/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

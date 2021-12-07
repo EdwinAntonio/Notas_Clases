@@ -1,0 +1,222 @@
+
+----------------------------- Los 4 principios de la POO
+
+	1.- Encapsulación
+	2.- Inherencia
+	3.- Abstracción
+	4.- Polimorfismo
+
+
+1.- Encapsulación:	Es la forma en la que protegemos las propiedas y funciones de un objeto de otros objetos
+
+2.- Inherencia:		Es el proceso de definir un nuevo objeto con la ayuda de un objeto ya existente usando la
+			palabra reservada extends
+
+3.- Abstraccion:	Es princpio de esconder todos los detalles innecesarios de un objeto y mostrar solamente las
+			caracteristicas que el otro objeto necesita comunicar con este
+
+4.- Polimorfismo:	Significa multiples formas o comportamientos y es la forma en la que podemos acceder a esas
+			funciones unicas de cada clase u objeto
+
+
+
+
+----------------------- Statico y no estatico
+
+El echo de asignar un tipo statico es de que solamente se usaran esas caracteristicas en la classe y cuando se usen
+de forma NO estatica las caracteristicas pasaran a ser de tipo objeto, osea que se podran ver cuando sean mandadas a
+llamar en otra clase a ese objeto
+
+
+
+
+
+----------------------- Creación de el contructor
+
+Cuando no especificamos un constructor principal '()' lo que hace java es que crea un constructor por default al 
+momento de compilar y se ejecuta sin problemas, pero esta no es una buena practica
+
+
+
+----------------------- Hilos
+
+La utilización de hilos es simplemente la implementación de una tarea en proceso de ejecución
+
+
+
+
+
+	
+
+	--------- Ejecucíon de Multihilos no secuenciales
+
+	Con este metodo nosotros podemos realizar mutliples tareas de forma paralela y usar el metodo run() para
+	poder generar el uso de trabajo paralelo, ejemplo:
+
+	public lass Multithread extends Thread{
+
+		public static void main(String arg[]){
+			Multithread mt = new Multithread();
+			mt.start();
+
+			for(int j=0;j<=100;j++){ system.out.print("j: "+j+"\t")}
+		
+		}		
+
+		public void run(){
+			//Aqui ponemos todo lo que queramos que el hilo ejecute
+			for(int i=0;i<=100;i++){
+				system.out.print("i: "+i+"\t")
+			}
+		}
+
+	}	//Salida j:1 i:1 i:2 j:2 i:3 i:4 i:5 j:3
+
+
+
+
+
+
+------------------- Dormir un hilo
+
+Para nosotros poder dormir un hilo utilizamos el metodo Thread.sleep([Cantidad en ms])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
