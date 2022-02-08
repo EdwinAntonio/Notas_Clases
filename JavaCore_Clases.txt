@@ -83,6 +83,198 @@ Para nosotros poder dormir un hilo utilizamos el metodo Thread.sleep([Cantidad e
 
 
 
+------------------- Java 8
+
+Java 8 es una version con caracteristicas importantes que nos ayudan al desarrollo de aplicaciones usando la 
+programación funcional, como por ejemplo funciones tipo lambda, interfaces funcionales, methodos default,
+predicados, etc.
+
+
+
+	-------------- Lambda
+
+	UN lambda es una funcion que no tiene nombre, tampoco un tipo de retorno y normalmente no utiliza variables
+	en si es una funcion anonima, para poder usar expresiones Lambda necesitas siempre una Interfaz Funcional
+	y para eso utilizamos la notación @FunctionalInterface
+
+	Los beneficios de estas funciones es que nos ayudan a escribir menos codigo, no son faciles de hackear y su
+	proceso de ejecución es más rapido, lo malo es que no en todo puede ser aplicable y su sintaxis puede ser
+	algo revoltoso para personas que no comprenden este estigma
+
+	Algunos ejemplos de interfaces funcionales son:
+
+			Runnable 		run
+			Compare			compareTo
+
+
+
+
+	---------- Ejemplo de una interfaz funcional
+
+	@FunctionalInterface
+	public interface A{
+
+		void myInterface();  <------- Siempre debe de ir un unico methodo o sino no sera una interfaz funcional
+
+	}
+
+
+	@FunctionalInterface
+	public interface B extends A{
+
+		void myInterface();
+	}
+
+
+	------------- Creando un lambda
+
+	public class C implements A{
+
+		@Override
+		public void myMethod(){
+			System.out.println("inside method")
+		}
+	}
+
+		--- En otra clase ejecutamos nuestro lambda --
+
+
+	public class Test{
+		
+		public static void main(String arg[]){
+			A a = ()->System.out.println("Inside MyMethod");
+			a.myMethod();	
+		}
+		//Resultado: inside Method
+	}	
+
+
+
+		---- Asignación de lambdas con parametros ---
+
+	@FunctionalInterface
+	public interface Sum{
+
+		void add(int a, int b);
+	}
+
+	public class Test{
+		
+		public static void main(String arg[]){
+			Sum s = (x,y)->System.out.println("Sum is: "+(x+y));
+			a.add(10,20);	
+		}
+		//Resultado: inside Method
+	}
+
+
+		---- Asignación de lambdas con Interfaz Runnable ---
+
+	@FunctionalInterface
+	public class MyRunnableImpl implements Runnable{
+
+		@Override
+		public void run(){
+			for(int i=1;i<=10;i++){System.out.println("Child Thread")}
+		}
+	}
+
+	public class Test{
+		
+		public static void main(String arg[]){
+			Runnable r = () -> {
+				for(int i=1; i<=10; i++){
+					System.out.println("Child Thread")
+				}
+			};
+			for(int i=1; i<=10; i++){
+				System.out.println("Main Thread")
+			}	
+		}
+		//Resultado: inside Method
+	}
+
+
+		---- Asignación de lambdas con Interfaz Runnable ---
+
+	@FunctionalInterface
+	public class MyRunnableImpl implements Runnable{
+
+		@Override
+		public void run(){
+			for(int i=1;i<=10;i++){System.out.println("Child Thread")}
+		}
+	}
+
+	public class Test{
+		
+		public static void main(String arg[]){
+			Runnable r = () -> {
+				for(int i=1; i<=10; i++){
+					System.out.println("Child Thread")
+				}
+			};
+			Thread t = new Thread(r);
+			t.start();
+			
+			for(int i=1; i<=10; i++){
+				System.out.println("Main Thread")
+			}	
+		}
+		//Resultado: inside Method
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

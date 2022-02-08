@@ -18,12 +18,15 @@ lo siguiente una vez instalado el JDK
 	    "properties"
 	2.- En el menu del lado derecho presionamos la opción "Advanced system settings"
 	3.- En la ventana desplegable seleccionamos "Environment Variables"
-	4.- En el 2do cuado de abajo donde dice "System Variables" damos click en "New", lo llamamos 
-	    "JAVA_HOME" y seleccionamos el directorio de nuestro JDK instalado, damos Aceptar
-	5.- En ese mismo cuado seleccionamos la variable "PATH" y agregamos una nueva variable al PATH, la
+	4.- En el 2do cuadro de abajo donde dice "System Variables" damos click en "New", lo llamamos 
+	    "JAVA_HOME" y seleccionamos el directorio de nuestro JDK instalado, normalmente se encuentra en
+	    (C:\Program Files\Java\jdk1.8.0_[versión]\bin) y damos Aceptar
+	5.- En ese mismo cuadro seleccionamos la variable "PATH" y agregamos una nueva variable al PATH, la
 	    llamamos %JAVA_HOME%\bin , presionamos el boton Move UP y colocamos la variable hasta arriba
 	6.- Damos OK, OK, OK y listongo! :D
 
+
+	Referencias: https://www.abrirllave.com/java/configurar-la-variable-de-entorno-path.php
 
 ---------------------------------------- Modulos de Spring --------------------------------------------------
 
