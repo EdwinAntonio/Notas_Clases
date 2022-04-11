@@ -28,6 +28,19 @@ lo siguiente una vez instalado el JDK
 
 	Referencias: https://www.abrirllave.com/java/configurar-la-variable-de-entorno-path.php
 
+
+---------------------------------------- Puerto Tomcat 9 --------------------------------------------------
+
+server shutdown port: -1
+Puerto HTTP: 9080
+
+Para conectar Tomcat9 con intelliJ ver el siguient enlace: https://www.youtube.com/watch?v=JIRDMGJ66SE
+
+
+	Para crear un projecto en blanco en IntelliJ solamente damos a crear nuevo archivo, y en cada 
+	proyecto tenemos que instalar el server de Tomcat, los JUnitest (Que encontraras en el archivo
+	de JUnit_Clases) y todo lo demás que quieras instalar dentro de CADA PROYECTO
+
 ---------------------------------------- Modulos de Spring --------------------------------------------------
 
 Los modulos de spring son aquellas dependencias que nos ayudan a realizar los distintos procesos que usaremos
