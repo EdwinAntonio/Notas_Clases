@@ -30,7 +30,75 @@ Listongo! :D
 
 
 
+	------------ Recomendable instalar el pluging Mithril Emmet para autocompletado de sintaxis
+
+
+
 --------------------------------------- Creación de una nueva aplicación con React
+
+Para la creaciòn de una nueva aplicación en react podemos hacerlo mediante un servidor web al cual podemos
+anexar o comenzar a desarrollar ahí las plicaciones que necesitemos
+
+Entonces hacemos lo siguiente:
+
+	1. Creamos un nuevo proyecto en VSC
+
+	2. Geramos la sitaxis de Codigo dentro de un DOCTYPE y su estructura
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Title of the Page! :D</title>
+</head>
+<body>
+    This is my first HTML file with REACT right now
+</body>
+</html>
+	
+	3. Lo mandamos ejecutar a un servidor para verlo en el browser
+
+	4. Seguimos actualizando sin dejar de correr el servicio del servidor
+
+	5. 
+
+
+
+--------------------------------------------- Correr la app en nuesstro navegaro
+
+1.- Nos vamos a nuestro proyecto con git bash y corremos los siguientes comandos
+
+	yarn global add live-server   ó  npm install -g live-server
+
+	(NOTA: Para asegurarnos que se instalo correctamente lo hacemos con el comando live-server -v, en caso de
+		no ver la versión, utilizar el comando con npm install)
+
+2.- Ejecutamos el servidor con nuestro proyecto usando el comando
+
+	live-server [nombre de la carpeta donde esta nuestro HTML]
+
+	(NOTA: hay que asegurarse de que sea exclusivamente una extención tipo HTML, no xhtml o cxhtml)
+
+	(NOTA2: Para salir de la linea de comandos de live-server solo presionamos Ctrl+C)
+
+
+
+
+---------------------- Renderizar código con plantillas de JavaScript
+
+Para poder ingresar plantillas con código JS usamos la notacion 
+
+		<script src=""></script>
+
+Donde podemos generar estructuras tipo JSX (que significa JavaScript XML)
+
+	NOTA: XML solamente es una extensión de JavaScript, no significa que sea de JS
+
+
+
+
 
 
 

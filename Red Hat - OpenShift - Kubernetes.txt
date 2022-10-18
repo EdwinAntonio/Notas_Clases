@@ -1,0 +1,586 @@
+	Que son los contenedores?
+
+Son programas que pueden ser ejecutados para la realización de una sola funcion que proviene de un programa completo
+estos sistemas ejecutables son llamados como "imagenes", los cuales para poder ser compatibles con otros tipos
+de contenedores o imagenes, se deben de estandarizar para poder tener una funcionabilidad adaptable a otros
+contenedores, estos contenedores SON SOLAMENTE PROCESOS CON RESTRICCIONES, esa es la diferencia entre una VM.
+
+Para estandarizar un contenedor normalmente se utilizan sistemas de trabajo como Docker, Kubernetes o OpenShift que
+nos ayudaran a tener una comunicación más amigable entre contenedores ya que siguen un estandar.
+
+
+	Que es OpenShift?
+
+OpenShift es Kubernetes, es una estensión de Kubernetes, de estandarización que nos ayuda a tener un contenedor corriendo bajo ciertos criterios que nos 
+ayudaran a comunicar nuestro contenedor con otros ¡¡OJO!! Un contenedor no es una VM, pareciera pero no lo es, ya
+que este contenedor trabaja con el Kernel y no con los sistemas exteriores al Kernel.
+
+	Caracteristicas de OpenShift
+
+1.- Flujo de trabajo integrado al desarrollador
+    RHOCP integra una construccion de registros, CI/CD pipelines, y S2I, una herramiento para contruir artefactos 
+    desde los recursos de nuestros repositorio y agregarlos a nuestras imagenes de contenedores.
+
+2.- Rutas
+    Expone facilmente los revicios al mundo exterior
+
+3.- Metricas y logeos
+    Incluye una construccion interna y provee un propio analisis de los servicios de metricas y logeos inicializados
+
+4.- Unifica UI's
+    OpenShift brinda herramientas para unir y gestionar UI's en todas sus diferentes capacidades. 
+
+	Cuales son las ventajas de usar Contenedores?
+
+1.- El bajo uso del hardware, ya que una vez que ejecutamos un contenedor, éste no requiere el consumo de más
+    requisitos en nuestro ordenador, ya que el contenedor contiene todos los paquetes o librerias necesarias para
+    trabajar, por dentro del contenedor parecería trabajar al 100% pero en nuestro ordenador trabaja a un 10% y no 
+    más.
+
+2.- Environment Isolation
+    Los contenedores trabajan en espacios cerrados donde los cambios hechos al SO o otras aplicaciones no afectan
+    al contenedor, porque las librerias necesarias para el contenedor ya se encuentran dentro del contenedor y la
+    aplicación puede correr sin interrupciones.
+
+3.- Quick Deployment
+    Al ser ejecutables de una sola función, su ejecución es más rapida ya que no requiere de muchos recursos del
+    ordenador y porque todo lo necesario para ejecutarse se encuentra dentro y no hace falta descargar o solicitar
+    recursos extras a nuestro computador.
+
+
+	Que significa un contenedor para el Kernel?
+
+Es un programa aislado del propio sistema que tiene sus recursos del Kernel de manera limitada a las unicas
+especificaciones que solicita en el arranque el contenedor y no más.
+
+
+	Que es un POD?
+
+Un pod es un cluster que puede contener multiples contenedores por dentro, normalmente estos pod's suelen tener un
+unico contenedor por cluster, pero cabe aclarar que se puede tener multiples contenedores corriendo dentro de un
+cluster (POD), siempre que se encuentren trabajando 1 o más POD's en simultaneo y se quiera aumentar o escalar un
+recurso de alguno de los POD's, estos tendrán que escalar simultaneamente, o sea, lo que se le hace a un pod tambien
+se le tiene que hacer a los demás pods que esten utilizando su recurso.
+
+
+	Para guardar archivos en linea de comando presionamos la tecla ESC, despues escribimos :w para escribir y
+	:q para salir.
+
+
+------------------------------- Actividades
+
+
+1.-Configurar nuestros repositorios de GIT a nuestra VM donde estaremos trabajando
+
+	Vamos a GIThub, en nuestra cuenta principal donde tendremos los repositorios, vamos a generar un Key Token
+	el cual lo obtendremos yendo a Settings - Developer Settings - Create Key Token, lo copiamos y creamos un
+	nuevo documento en nuestro disco local de la VM con la terminal de la siguiente manera
+
+		1.- vim token [Enter]
+		2.- [Copiamos el link] 
+		3.- [Presionamos ESC]
+		4.- :w [Enter]
+		5.- :q [Enter (Para salir)]
+
+	En nuestra terminal ahora configuramos nuestras credenciales globales
+	
+		1.- git config --global credential.helper cache [Enter]
+		(OJO, en caso de que en este paso nos pida la contraseña, usar el key token como contraseña, ya que
+		 esa es nuestra "contraseña temporal")
+
+	Vamos a Quay.io y accedemos con nuestra cuenta de Red Hat
+	
+		1.- Nos vamos a nuestro perfil y damos click en Account Settings - Password - Change Password
+
+	Una vez que cambiamos la contraseña regresamos a nuestra VM y configuramos nuestro laboratiorio con los
+	siguientes comandos
+	
+		1.- lab-configure [Enter]
+		2.- [La información que nos pide] (Que algunas encontraremos en la pestaña de nuestro LAB)
+		3.- cat /usr/local/etc/ocp4.config [Enter (Para verificar el valor de la configuracion)]
+		4.- . /usr/local/etc/ocp4.config [Enter (El punto es para ejecutar este archivo de config)]
+
+	Regresamos a nuestra cuenta de Github y copiamos las apps que serviran de entrenamiento o de trabajo y
+	copiamos nuestros proyectos a nuestro repositorio en Github
+
+		git clone [URL] (En caso de laboratorio de REDHAT la URL es: https://github.com/RedHatTraining/DO180-apps.git)
+
+		(NOTA: En caso de ser mi propia cuenta a la que hacemos FORK entonces es: https://github.com/EdwinAntonio/DO180-apps.git)
+
+		(¡¡OJO!! cuando vamos a hacer un push por primera vez usamos el comando)
+
+		git push --set-upstream origin [Nombre del branch]
+
+		(¡¡OJO 2!! En caso de que nos pida usuario y contraseña, ponemos nuestro usuario de GITHUB y
+		 la contraseña sera el Key Token que usamos anteriormente)
+
+		Leer archivos con el comando: cat [Nombre del archivo]
+
+
+
+----------------------- Contenedores (Imagenes)
+
+Siempre antes de descargar una imagen hay que tener en cuenta que debemos de asignarle un nombre a esa imagen al
+momento de correrlo o ejecutarlo, ya que de lo contrario nos asignara un nombre raro que despues podríamos 
+confundir, todo esto con el tag --name
+
+	Variables
+
+Para nosotros poder injectar variables dentro de nuestra imagen para poder trabajar con usuarios o contraseñas
+propias en la capa de nuestro contenedor, usamos el tag -e [Atributo]=[Valor]
+
+
+----------------------- Correr un contenedor de SQL en nuestro contenedor
+
+1.- Inicializamos el laboratirio de Redhat con el siguiente comando
+
+	lab container-create start
+
+2.- Nos logeamos en podman con redhat.io con el siguiente comando
+
+	podman login registry.redhat.io
+
+3.- Creamos la imagen de nuestro contenedor SQL con la configuración de nuestro usuario que deseemos
+
+	podman run --name mysql -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 -d registry.redhat.io/rhel8/mysql-80:1
+
+	(OJO Los atributos siempre deben de ir en MAYUSCULAS)
+
+	(OJO 2: El orden de la sintaxis si afecta, asi que primero el run, despues el nombre, despues variables [-e], el segundo plano [-d] y al final el registro)
+
+4.- Checamos que nuestro contenedor este corriendo con el siguiente comando ps
+
+	podman ps -a (Recomendado este comando porque integra el ID del container)
+		ó 
+	podman images (Si quieres ver el ID de la Imagen usa este comando)
+
+
+
+
+------------------------- Entrar a la consola BASH de nuestra imagen/contenedor
+
+1.- Para entrar a la consola de nuestro contenedor tenemos que entrar con el comando exec -it
+
+	podman exec -it [Nombre_del_contenedor] /bin/bash
+
+
+
+------------------------- Entrar a la aplicacion de nuestro contenedor
+
+1.- Para entrar a la aplicacion de nuestro contenedor (En este caso MySQL) lo haremos con el siguiente comando
+
+	mysql -uroot
+
+2.- Una vez estando dentro de nuesto MySQL lo usamos como una BD normal, para mostrar las bases de datos de 
+    nuestra aplicacion
+
+	show databases;
+
+3.- Usar alguna base de datos de MySQL
+
+	use items;
+
+4.- Creamos una entidad-relacion de tablas
+
+	CREATE TABLE Projects (id int NOT NULL, name Varchar(255) DEFAULT NULL, code Varchar(255) DEFAULT NULL, PRIMARY KEY (id));
+
+5.- Insertamos valores
+
+	insert into Projects (id,name,code) values (1,'DevOps','DO180');
+
+6.- Vemos los valores dentro de nuestra tabla
+
+	select * from Projects;
+
+
+
+
+------------------------ Rootles Containers
+
+Creamos una ruta de containers con los siguientes comandos
+
+1.- Para crear una rootless de contenedores primero inicializamos nuestro laboratiorio de Redhat
+
+	lab container-rootless start
+
+2.- Inicializamos nuestro contenedor con Podman
+
+	podman run --name asroot -it registry.access.redhat.com/ubi:8latest /bin/bash 
+	
+		ó
+
+	podman run --rm --name asroot -it registry.access.redhat.com/ubi:8latest /bin/bash
+
+
+	(OJO el --rm sirve para que una vez que dejemos de usar el contenedor, este se cierrre por completo, si no,
+	     tendremos que hacerlo de forma manual)
+
+3.- Vemos como nuestro contenedor esta corriendo con el siguiente comando
+
+	podman ps -a
+
+
+4.- Para terminar el ejercicio solo precionamos el siguiente comando
+
+	lab container-rootless finish
+
+
+
+
+----------------------------------- Borrar un contenedor
+
+Para borrar un contenedor tenemos que hacer lo siguiente, vamos a nuestro contenedor con el comando
+
+	podman ps -a
+
+1.- Vemos el nombre del contenedor que queremos borrar y primero paramos el contenedor
+
+	podman stop [Nombre_del_Contenedor/Los_Primeros_5_caracteres_del_CONTAINER_ID]
+
+2.- Despues para borrarlo usamos el siguiente comando
+
+	podman rm [Nombre_del_Contenedor/Los_Primeros_5_caracteres_del_CONTAINER_ID]
+
+
+
+	[CAPITULO 3]
+
+
+------------------------------------ Mover/Copiar archivos dentro y fuera de nuestro contenedor
+
+Para poder mover o copiar cosas fuera de nuestro contenedor usamos el comando [cp] el cual nos ayuda a copiar
+lo que tengamos en nuestro contenedor dentro y afuera de él, ejemplo
+
+	podman cp [La ruta de lo que queremos copiar] [A donde lo vamos a copiar]
+
+	podman cp DO180/labs/manage-lifecycle/db.sql mysql:/
+
+
+
+-------------------------- Correr comandos dentro de un contenedor sin entrar a la consola de la imagen
+
+Podemos realizar ejecuciones de comando dentro de un contenedor sin la necesidad de entrar a la consola de ese
+contenedor, lo unico que necesitamos hacer es especificar las siguientes instrucciones y en ese orden
+
+	(OJO: Hay que asegurarse que el contenedor se encuentra corriendo, para eso aseguarnos con el comando 
+	  $ podman ps -a)
+
+	podman exec [nombre_imagen] [ruta_de_consola] -c '[comando_a_ejecutar]'
+
+	podman exec mysqlinf /bin/bash -c 'mysql -uuser1 -pmypa55 -e "select * form items.Projects;"'
+	
+	(Nota: recordar que el comando [-e] sirve para indicar que insertaremos una variable, en este caso, el
+	       querry de la petición a la base de datos)
+
+------------------------------------- diferencias entre exec y run
+
+Cuando usamos run es que queremos inicializar lo que viene siendo un contenedor, mientras que exec lo que hace
+es que dentro de este contenedor que ya tenemos corriendo, corre otro container o sobreescribe la funcionalidad
+del contenedor que ya se encuentra corriendo
+
+
+------------------------- Gestionando un Life-Cycle de un contenedor
+
+Para poder hacer el ejercicio de gestion de ciclo de vida de un contenedor, primero tenemos que logearnos a redhat
+con podman e inicializar nuestra base de datos, para eso hay que seguir los siguientes pasos
+
+
+	1$.- podman login registry.redhat.io [Enter]
+	2.- [Agregamos username y contraseña]
+	3$.- podman run --name mysql-db  registry.redhat.io/rhel8/mysql-80:1
+
+		o dandole la informacion que requiera con el siguiente comando
+	     
+	     podman run --name mysql -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 -d registry.redhat.io/rhel8/mysql-80:1
+	4$.- podman exec mysqlinf /bin/bash -c 'mysql -uuser1 -pmypa55 items < /db.sql' [Enter]
+	5$.- podman exec mysqlinf /bin/bash -c 'mysql -uuser1 -pmypa55 -e "select * form items.Projects;"' [Enter]
+
+
+
+
+
+----------------------- Almacenamiento Persistente en un Contenedor
+
+Lo que se busca hacer esta vez es que el almacenamiento de cada uno de nuestros contenedores sea persistente, o sea
+que cualquier contenedor que ya sea borrado, instalado o configurado o instalado desde 0, aún tenga acceso a la 
+información que se maneja dentro de este storage
+
+	(OJO: Antes de comenzar este storage tienes que asegurarte que no debe de haber ningun contenedor corriendo
+    	      durante la configuración de este storage)
+
+Siempre tenemos que tener en cuenta que para poder realizar esta asaña el SEUXLinux siempre debe de tener una ruta
+especificada al momento de crear la presistencia la cual sería container_file_t
+
+Para ver el significado de semage, unmage, etc... ver el capitulo 3 del libro de Redhat
+
+Una vez captada la adevertencia se hace lo siguiente:
+
+	1$.- lab manage-storage start
+	2$.- mkdir -p local/mysql  (<---- la [-p] sirve indicar un puerto, sino, signfica que asignara por default)
+	3$.- sudo semage fcontext -a -t container_file_t (<----[-a, indica un atributo] [-t, tipo de atributo] )
+	4$.- sudo restorecon -R /home/student/local/mysql
+	5$.- ls -Zd /home/student/local/mysql  (<----- [-Zd] sirve para ver las configuraciones de esa ruta) 
+
+		(En el paso 5 debes de ver que en el atributo [object_r] diga [container_file_t], sino, repetir los
+		 pasos hasta que salga, porque si no, no podras realizar los siguientes pasos y maracara error de
+		 SELinux)
+	
+	6$.- podman unshare chown 27:27 /home/student/local/mysql [Enter]
+	7$.- podman login registry.redhat.io [Enter]
+	8$.- podman pull registry.redhat.io/rhel8/mysql-80:1
+	9$.- podman run --name persist-db -v /home/student/local/mysql:/var/lib/mysql/data -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 e- MYSQL_DATABASE=items e- MYSQL_ROOT_PASSWORD=r00tpa55 -d registry.redhat.io/rhel8/mysql-80:1
+	10$.- ls local/mysql (Si aparecen datos de auto.cnf signfica que todo fue SUCCESS!! :D)
+
+		(NOTA: Recordar que la ruta [/home/student/local/mysql/] signfica DONDE ALMACENAREMOS LA INFO, 
+			mientras que la direccion [/var/lib/mysql/data] significa QUE INFORMACION ALMACENAREMOS)
+
+		(NOTA 2: Si, siempre deben de ir los 2 puntos [:] entre la direccion de almacenamiento y la que 
+			vamos a almacenar, como se ve en el ejemplo [9$] )
+		
+
+
+----------------------- Accediendo a contenedores desde el exterior (MAPEO DE PUERTOS DE RED)
+
+Para el siguiente paso de acceso a contenedores ocuparemos mapear los puertos de red
+
+
+	podman run --name [Imagen] -d -p [Puerto por donde LEE informacion]:[Puerto por donde ENVIA informacion]
+
+					 ext:int
+	podman run --name apache1 -d -p 8080:8081 \ registry.redhat.io/rhel8/mysql-80:1
+
+
+
+Ejercicio 1 para la explicacion de mapeo de redes
+
+	1$.- lab manage-networking start
+	2$.- podman login registry.redhat.io
+	3$.- podman run --name mysqldb-port -v /home/student/local/mysql:/var/lib/mysql/data -p 13306:3306 -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 -d registry.redhat.io/rhel8/mysql-80:1
+	4$.- podman ps -a
+
+	Para concetarnos al container y extrar datos lo haremos de direfentes maneras ahora
+
+	(Sin usar [podman exec])
+	
+		mysql -u[usuario] -h [puerto de host] -p[contraseña] -P[puerto] [base_de_datos_a_buscar] < [archivo_que_contiene_los_datos]
+
+		mysql -uuser1 -h 127.0.0.1 -pmypa55 -P13306 items < /home/student/DO180/labs/manage-networking/db.sql
+
+
+	(Usando [podman exec])
+
+		podman exec [Imagen] mysql -u[usuario] [db] -e '[query]'
+	
+		podman exec mysqldb-port mysql -uroot items -e 'select * from Item'
+	
+	
+	(Query desde el exterior sin [podman exec])
+
+		mysql -u[usuario] -h [puerto host] -p[contraseña] -P[puerto] [base_de_datos_a_buscar] -e '[query]'
+
+		mysql -uuser -h 127.0.0.1 -pmypa55 -P13306 items -e 'select * from Item' 
+
+
+	(Usando la cosola de comandos)
+
+		1$.- podman exec it [imagen] /bin/bash
+		2$.- mysql -u[usuario] [db] -e '[query]'
+
+		3$.- podman exec -it mysqldb-port /bin/bash 
+		4$.- mysql -uroot items -e 'select * from Item'
+
+
+
+
+
+
+
+
+
+------------ CAPITULO 4 -------------------------- Manejo y Gestión de Imagenes con Red Hat
+
+
+----------------------- Descargar imagenes desde podman
+
+Para poder descargar imagenes en este caso desde el repositorio de imagenes en quay.io tenemos primero que 
+logearnos a nuestra cuenta de quay.io
+
+	$ podman login quay.io
+
+
+Una vez logeados para hacer llamada a alguna imagen se puede hacer de diferentes maneras, en este caso tenemos los
+siguientes ejemplos:
+
+
+Ejemplo 1:
+
+			[SP]         [Imag_name]      [PORT]  [URL]
+	$ podman run -d --name officialy-httpd -p 8180:80 quay.io/redhattraining/httpd-parent
+
+		[-d] <------ Recordemos que es para correr en Segundo Plando
+		[-p] <------ Recordemos que es para poner el tipo de puerto
+	
+	$ podman ps -a 							(Asegurarnos que esta corriendo nuestro contenedor)
+				 [Img_ID]
+	$ podman exec -it 412edr123 /bin/bash 			(Entrar a la consola de nuestra Img)
+
+	$ echo "DO180 Page" > /var/www/html/do180.html  	(Agregamos un poco de texto y lo almacenamos en local)
+	$ exit 								(Salimos de la consola de HTTPD)
+
+	$ curl 127.0.0.1:8180/do180.html 				(Accedemos mediante la URL a nuestro archivo creado de HTML)
+
+	$ podman diff -l 							(Vemos los cambios realizados con [diff])
+
+		[-l] <------ Utilizado para ver los ultimos (Lasted) cambios
+
+		Nota: Los cambios que se encuentren con una A son los cambios Agregados (Add), con una C los archivos
+			o localidades que se modificaron/cambiaron (Changed) y con una D los archivos o localidades que
+			fueron borradas (Deleted)
+
+
+
+
+--------------------- Agregar una nueva capa a nuestra imagen
+
+Una vez que tenemos una imagen corriendo con los cambios que hayamos decidido realizar el primer paso que haremos
+es parar la ejecucion de la imagen (OJO, Parar, no eliminar con rm) usando el comando [stop] 
+
+	$ podman stop [Img_ID/name]
+
+	$ podman stop officialy-httpd 
+
+y una vez realizado el parar la ejecucion hacemos lo siguiente
+
+Ejemplo:
+				   [Author]         [Img_name]      [New_Img_Name]
+	$ podman commit -a "Edwin Antonio" offiacialy-httpd do180-custom-httpd
+
+	[-a] <---------- Nombre de un autor a la nueva capa
+
+	
+
+
+
+
+---------------------- Publicar nuestra nueva imagen con capas a un repositorio de imagenes
+
+Una vez que tenemos nuestra imagen con el commit necesario y queremos publicarlo usaremos el comando [push], hay
+que tener en cuenta que el push solamente envíara la ultima capa que se haya guardado en nuestra imagen maestra
+ya que esto es lo buendo de Redhat al momento de enviar nuestra imagen a un repositorio de imagenes y lo hace 
+eficiente
+
+Para este trabajo es muy sencillo y solamente requiere de los siguientes pasos
+
+Paso 1: Cargar las variables de entorno de nuestro archivo de configuración local de OCP4 que podremos utilizar
+	  en cualquier momento que queramos
+
+	$ source /usr/local/etc/ocp4.config
+
+		ó
+
+	$ . /usr/local/etc/ocp4.config 				(El [.] es lo mismo que escribir el comando [source])
+
+
+Paso 2: Tagear una imagen para push
+
+Para antes de enviar una imagen a un repositorio de imagenes tenemos que "Taggear" nuestra imagen para decirle a
+donde vamos a enviarla y que nombre tendra o tiene esa nueva imagen en el repositorio de imagenes, para eso
+hacemos lo siguiente
+
+Ejemplo:
+
+	$ podman tag [options] [Image:TAG] \ > [RegistryHost/] [Username/]NAME[:TAG]
+	
+			    [Img_Name]      	[Rename_Img_Name_in_quay_io_page] 
+	$ podman tag do180-custom-httpd quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+								[OCP4_Variable]
+
+	Nota: Lo que hicimos fue que al nombre de nuestra imagen lo vamos a renombrar de una nueva manera,usando una
+		de las variables de nuestro archivo de configuracion que cargamos en el paso 1 para nombrar esta nueva
+		imagen con nuestro nombre de usuario, además de que le agregamos el "TAG" al final de su nombre para 
+		reconocerlo
+
+	Nota 2: Para saber que lo hicimos bien, una vez usando el comando [$ podman ps -a] debemos ver 2 imagenes con
+		el mismo nombre, de esa manera sabemos que la que tiene el TAG es la nueva imagen que vamos a estar 
+		publicando en el repositorio de imagenes una vez que usemos el PUSH, es como la referencia a la imagen
+		que publicaremos en nuestro registros de quay.io
+
+Paso 3:
+
+Ahora una vez puesta nuestra nuestra imagen tageada pasamos a publicarla en el respositorio de imagenes en nuestra
+cuenta de quay.io dentro de un repositorio privado se hace de la siguiente manera
+
+Ejmplo:
+	$ podman push quay.io/earella/do180-custom-httpd:v1.0   	(Bien)
+
+	$ podman push quay.io/earella/do180-custom-httpd		(Mal, no tiene tag)
+
+	(¡¡OJO!!, si nosotros intentamos hacer push a una imagen que no esta tageada, nos dira la terminal que no
+	 reconoce la imagen que queremos publicar, ya que esa imagen no tiene aún un Tagging para reconocimiento)
+
+
+	(¡¡¡OJO 2!!!, si nos sale un error de tipo "Error: Trying to reuse blob ... : unauthorized : authentication
+	 required", necesitaremos logearnos con el comando [$ podman login quay.io])
+
+
+
+
+
+
+
+--------------------------------- Hacer pull de una imagen
+
+Para verificar que una imagen esta disponible en nuestro repositorio de imagenes tenemos que hacer un pull de 
+esa imagen ya que especificamos de una forma más rapida el tipo de imagen que queremos buscar en vez de usar el 
+comando [search] el cual podría tomar horas en buscar
+
+
+Ejemplo:
+
+	$ podman pull -q [Imag_URL]
+
+	$ podman pull -q quay.io/earella/do180-custom-httpd:v1.0
+
+
+	Nota: Si queremos instanciar una imagen de nuestro propio repositorio privado en Quay.io no es necesario 
+		poner la ruta completa, solamente nuestro usuario y nuestra imagen que queremos
+
+		Ejemplo:
+
+			$ podman run -d --name [name] -p [PORT] [URL]
+
+			$ podman run -d --name test1 -p 8280:80 quay.io/earella/do180-custom-httpd:v1.0		(NO)
+
+			$ podman run -d --name test1 -p 8280:80 earella/do180-custom-httpd:v1.0 			(SI)
+
+
+
+
+---------------------- Remover una imagen del almacenamiento local
+
+Para poder eliminar una imagen de un almacenamiento local se hace con el comando [$ podman rmi [Img_name]] para
+eso vamos a necesitar primero eliminar el contenedor que esta utilizando esta imagen y después eliminamos el tag 
+de la imagen de nuestro almacenamiento local, de la siguiente manera:
+
+
+Paso 1:
+
+	$ podman rm [Img_name]
+
+	$ podman rm official-nginx-dev
+
+	$ podman ps -a 				(Asegurarse de que el contenedor que usaba a la imagen se elimino)
+
+Paso 2:
+
+	$ podman rmi [Img_Name]
+
+	$ podman rmi do180/mynginx:v1.0-SNAPSHOT
+
+	$ podman images 				(Asegurarse de que la imagen se elimino de nuestro almacenamiento local)
+
+
+
+
+
+
