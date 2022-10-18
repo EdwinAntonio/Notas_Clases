@@ -584,3 +584,126 @@ Paso 2:
 
 
 
+
+
+
+
+
+
+
+
+
+------------ CAPITULO 5 -------------------------- Creando Imagenes en Contenedores personalizados
+
+---------------------- Creando un archivo Apache Containerfile/Dockerfile 
+
+Para poder crear un contenedor personalizado primero tenemos que crear un archivo apache dentro de nuestra terminal
+para eso procedemos a hacer lo siguiente
+
+Paso 1:
+
+	Creamos nuestro Containerfile dentro de alguna carpeta que nosotros queramos y le asignamos las 
+	caracteristicas que nosotros deseemos a nuestra imagen, en este caso nostros agregamos las siguientes 
+	especificaciones
+
+	------------------
+
+		$ vim ~[Localidad_del_archivo]
+
+		#Mi primer imagen personalizada
+
+		FROM ubi8/ubi:8.5
+
+		MAINTAINER Edwin Antonio <edwinam007@hotmail.com>
+
+		LABEL description="A custom Apache container based on UBI 8"
+
+		RUN yum install -y httpd && \
+	    	    yum clean all
+
+		RUN echo "Hello from Containerfile" > /var/www/html/index.html
+
+		EXPOSE 80
+
+		CMD ["httpd","-D","FOREGROUND"]
+
+
+	(Una vez terminada la configuracion salimos del editor vim con esc, :w para escribir y despues :q para 
+	salir)
+
+	NOTA: Las barras estas [\] dentro de un archivo de configuracion [Containerfile/Dockerfile] solamente
+		significa que se hará un salto de linea en el comando pero siempre debe de respetarse la sangria
+		de cada linea de código, como es en el ejemplo del [RUN]
+
+		Para agregar mas caracteristicas a la variable de entorno en [RUN] solamente usamos el simbolo doble
+		amperson [&&] el cual nos ayuda a agregar más opciones de configuraciones, ejemplo:
+
+			Para no escribir:
+
+				RUN yum --disablerepo=*
+				RUN yum update -y
+				RUN yum install -y httpd
+
+			Lo escribimos todo dentro de una misma linea:
+
+				RUN yum --diablerepo=* && yum update -y && yum install -y httpd
+
+			O con saltos de linea se escribiría así:
+
+				RUN yum --dablerepo=* && \
+				    yum update -y && \
+				    yum install -y httpd		
+			
+				NOTA: En este ultimo se tiene que respetar la sangria de los espacios
+
+Paso 2:
+
+	Una vez construido el archivo Containerfile/Dockerfile procedemos a irnos a la carpeta en donde se encuentra
+	nuestro archivo creado con la configuración para ahora construir nuestra imagen con podman utilizando el 
+	siguiente comando:
+
+		$ podman build [options] -t [Tag] [Directorio] 
+
+		$ podman build --layers=false -t do180/apache .   
+
+		(Si el punto [.] si va al final e indica que se construira en este mismo directorio o especificamos otro)
+
+		NOTA: La construccion de nuestra imagen va a tardar dependiendo de las caracteristicas especificadas 
+			en el archivo de configuraciones del Congainerfile
+
+		$ podman images			(Nos aseguramos que si se creo nuestra nueva imagen)
+
+
+Paso 3:
+
+	Corremos nuestro nuevo contenedor utilizando el comando ya conocido y por el puerto que queramos, con el tag
+	con el cual fue creada nuestra imagen
+
+	Ejemplo:
+
+		$ podman run -d --name [Img_name] -p [port] [URL]
+
+		$ podman run -d --name lab-apache -p 10080:80 do180/apache
+	
+		$ podman ps -a 			(Asegurarnos que corrio correctamente la imagen)
+
+Paso 4:
+
+	Accedemos a nuestra nueva imagen con el comando CURL
+
+		$ curl [IP:port]
+
+		$ curl 127.0.0.1:10080/index.html
+
+
+	NOTA: Si al momento de tratar de conectar al servidor nos marca "Failed to connect to [port]: Connection
+		refused", probablemente se deba a que la dirección a la que queremos acceder en el archvio de conf
+		httpd no sea la correcta o este mal escrita (Normalmente las rutas deben de terminar con una [/])
+
+			Ejemplo:
+				/etc/httpd/log/ <------ Siempre con una [/] al final
+
+				/run/httpd/     <------ Siempre con una [/] al final
+
+
+
